@@ -160,9 +160,15 @@ export class HelloWorldPanel {
 
     vscode.window.showOpenDialog(opt).then((value) => {
       if(value !== undefined) {
+        let list : string[] = [];
+
         for(let i = 0; i < value.length; i++) {
-          this.sendMsgAddPath("addNewCSrcLine", value[i].path);
+          let newRelativePath = path.relative(this.workspacePath, value[i].path); // BUG back separator
+          this.sendMsgAddPath("addNewCSrcLine", newRelativePath);
+          list.push(newRelativePath);
         }
+
+        this.makefileReader.addValuesInVariable(this.makefileReader.cSourceMakeVar, list);
       }
     });
   }
