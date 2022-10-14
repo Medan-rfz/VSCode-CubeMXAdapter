@@ -2,6 +2,7 @@
 import * as vscode from "vscode";
 import { getUri } from "../utilities/getUri";
 import * as path from 'path';
+import {MakefileReader} from '../app/MakefileReader';
 
 /**
  * This class manages the state and behavior of HelloWorld webview panels.
@@ -18,6 +19,10 @@ export class HelloWorldPanel {
   private readonly _panel: vscode.WebviewPanel;
   private _disposables: vscode.Disposable[] = [];
 
+  private makefileReader : MakefileReader;
+
+  private workspacePath : string = '';
+
   /**
    * The HelloWorldPanel class private constructor (called only from the render method).
    *
@@ -29,6 +34,15 @@ export class HelloWorldPanel {
     this._panel.onDidDispose(this.dispose, null, this._disposables);
     this._panel.webview.html = this._getWebviewContent(this._panel.webview, extensionUri);
     this._setWebviewMessageListener(this._panel.webview);
+
+    if(vscode.workspace.workspaceFolders !== undefined) {
+      this.workspacePath = vscode.workspace.workspaceFolders[0].uri.path;
+    }
+
+    this.makefileReader = new MakefileReader(this.workspacePath.slice(1) + '/' + 'Makefile');
+    // TODO Check exist file
+
+    this.initMakefileVariables();
   }
 
   /**
@@ -125,6 +139,10 @@ export class HelloWorldPanel {
           case "cppSrcAddBattonClick":
             this.openCppSourceDialog();
             return;
+
+          case "headerAddBattonClick":
+            this.openHeaderDialog();
+            return;
         }
       },
       undefined,
@@ -143,34 +161,74 @@ export class HelloWorldPanel {
     vscode.window.showOpenDialog(opt).then((value) => {
       if(value !== undefined) {
         for(let i = 0; i < value.length; i++) {
-          this.sendMsgAddCSrc("addNewCSrcLine", value[i].path);
+          this.sendMsgAddPath("addNewCSrcLine", value[i].path);
         }
       }
     });
   }
 
-    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    private openCppSourceDialog() {
-      const opt : vscode.OpenDialogOptions = {
-        filters: { 'C++ Source': ['cpp'] },
-        canSelectMany : true,
-        title : "Add C++ source files"
-      };
-  
-      vscode.window.showOpenDialog(opt).then((value) => {
-        if(value !== undefined) {
-          for(let i = 0; i < value.length; i++) {
-            this.sendMsgAddCSrc("addNewCppSrcLine", value[i].path);
-          }
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  private openCppSourceDialog() {
+    const opt : vscode.OpenDialogOptions = {
+      filters: { 'C++ Source': ['cpp'] },
+      canSelectMany : true,
+      title : "Add C++ source files"
+    };
+
+    vscode.window.showOpenDialog(opt).then((value) => {
+      if(value !== undefined) {
+        for(let i = 0; i < value.length; i++) {
+          this.sendMsgAddPath("addNewCppSrcLine", value[i].path);
         }
-      });
-    }
+      }
+    });
+  }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-  private sendMsgAddCSrc(cmd : string, fullPath : string) {
-    if(vscode.workspace.workspaceFolders !== undefined) {
-      const workspacePath = vscode.workspace.workspaceFolders[0].uri.path;
-      this._panel.webview.postMessage({command: cmd, text: path.relative(workspacePath, fullPath)});
-    }
+  private openHeaderDialog() {
+    const opt : vscode.OpenDialogOptions = {
+      filters: { },
+      canSelectMany : true,
+      canSelectFiles : false,
+      canSelectFolders : true,
+      title : "Add header folder"
+    };
+
+    vscode.window.showOpenDialog(opt).then((value) => {
+      if(value !== undefined) {
+        for(let i = 0; i < value.length; i++) {
+          this.sendMsgAddPath("addNewHeaderFolderLine", value[i].path);
+        }
+      }
+    });
+  }
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  private sendMsgAddRelativePath(cmd : string, fullPath : string) {
+      this._panel.webview.postMessage({command: cmd, text: path.relative(this.workspacePath, fullPath)});
+  }
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  private sendMsgAddPath(cmd : string, path : string) {
+      this._panel.webview.postMessage({command: cmd, text: path});
+  }
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  private initMakefileVariables() {
+    let cSrcList = this.makefileReader.getCSourcePaths();
+    let cppSrcList = this.makefileReader.getCppSourcePaths();
+    let cIncList = this.makefileReader.getIncludePaths();
+
+    cSrcList.forEach(element => {
+      this.sendMsgAddPath("addNewCSrcLine", element);
+    });
+
+    cppSrcList.forEach(element => {
+      this.sendMsgAddPath("addNewCppSrcLine", element);
+    });
+
+    cIncList.forEach(element => {
+      this.sendMsgAddPath("addNewHeaderFolderLine", element);
+    });
   }
 }

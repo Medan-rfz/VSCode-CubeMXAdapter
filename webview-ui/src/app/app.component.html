@@ -3,18 +3,58 @@
   <h1>CubeMX adapter</h1>
 
   <div>
-    <h3>Source files</h3>
+    <h3>C source files</h3>
     <label>
       This section is responsible for connecting source files to the current project  
     </label>
 
     <div class="container-horizontal-stack">
-      <select multiple id="cSrcList">
+      <select multiple>
         <option *ngFor="let item of cSrcFiles">{{item}}</option>
       </select>
       
       <div class="container-vertical-stack">
         <button class="button-file-manipulation" (click)="cSrcAddClick()">Add</button>
+        <button class="button-file-manipulation">Edit</button>
+        <button class="button-file-manipulation">Delete</button>
+        
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h3>C++ source files</h3>
+    <label>
+      This section is responsible for connecting source files to the current project  
+    </label>
+
+    <div class="container-horizontal-stack">
+      <select multiple>
+        <option *ngFor="let item of cppSrcFiles">{{item}}</option>
+      </select>
+      
+      <div class="container-vertical-stack">
+        <button class="button-file-manipulation" (click)="cppSrcAddClick()">Add</button>
+        <button class="button-file-manipulation">Edit</button>
+        <button class="button-file-manipulation">Delete</button>
+        
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h3>Header folders</h3>
+    <label>
+      This section is responsible for connecting source files to the current project  
+    </label>
+
+    <div class="container-horizontal-stack">
+      <select multiple>
+        <option *ngFor="let item of headerFolders">{{item}}</option>
+      </select>
+      
+      <div class="container-vertical-stack">
+        <button class="button-file-manipulation" (click)="headerAddClick()">Add</button>
         <button class="button-file-manipulation">Edit</button>
         <button class="button-file-manipulation">Delete</button>
         
