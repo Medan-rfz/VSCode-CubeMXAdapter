@@ -1,0 +1,25 @@
+<main>
+
+  <h1>CubeMX adapter</h1>
+
+  <div>
+    <h3>Source files</h3>
+    <label>
+      This section is responsible for connecting source files to the current project  
+    </label>
+
+    <div class="container-horizontal-stack">
+      <select multiple id="cSrcList">
+        <option *ngFor="let item of cSrcFiles">{{item}}</option>
+      </select>
+      
+      <div class="container-vertical-stack">
+        <button class="button-file-manipulation" (click)="cSrcAddClick()">Add</button>
+        <button class="button-file-manipulation">Edit</button>
+        <button class="button-file-manipulation">Delete</button>
+        
+      </div>
+    </div>
+  </div>
+
+</main>

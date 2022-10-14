@@ -1,0 +1,6 @@
+.vscode/c_cpp_properties.json
+.angular
+node_modules
+out
+build
+TestPrj
