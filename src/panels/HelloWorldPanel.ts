@@ -4,16 +4,8 @@ import { getUri } from "../utilities/getUri";
 import * as path from 'path';
 import {MakefileReader} from '../app/MakefileReader';
 
-/**
- * This class manages the state and behavior of HelloWorld webview panels.
- *
- * It contains all the data and methods for:
- *
- * - Creating and rendering HelloWorld webview panels
- * - Properly cleaning up and disposing of webview resources when the panel is closed
- * - Setting the HTML (and by proxy CSS/JavaScript) content of the webview panel
- * - Setting message listeners so data can be passed between the webview and extension
- */
+
+
 export class HelloWorldPanel {
   public static currentPanel: HelloWorldPanel | undefined;
   private readonly _panel: vscode.WebviewPanel;
@@ -23,12 +15,11 @@ export class HelloWorldPanel {
 
   private workspacePath : string = '';
 
-  /**
-   * The HelloWorldPanel class private constructor (called only from the render method).
-   *
-   * @param panel A reference to the webview panel
-   * @param extensionUri The URI of the directory containing the extension
-   */
+  private cSrcList : string[] = [];
+  private cppSrcList : string[] = [];
+  private incList : string[] = [];
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
     this._panel = panel;
     this._panel.onDidDispose(this.dispose, null, this._disposables);
@@ -45,12 +36,7 @@ export class HelloWorldPanel {
     this.initMakefileVariables();
   }
 
-  /**
-   * Renders the current webview panel if it exists otherwise a new webview panel
-   * will be created and displayed.
-   *
-   * @param extensionUri The URI of the directory containing the extension.
-   */
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public static render(extensionUri: vscode.Uri) {
     if (HelloWorldPanel.currentPanel) {
       HelloWorldPanel.currentPanel._panel.reveal(vscode.ViewColumn.One);
@@ -68,9 +54,7 @@ export class HelloWorldPanel {
     }
   }
 
-  /**
-   * Cleans up and disposes of webview resources when the webview panel is closed.
-   */
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public dispose() {
     HelloWorldPanel.currentPanel = undefined;
     this._panel.dispose();
@@ -82,17 +66,7 @@ export class HelloWorldPanel {
     }
   }
 
-  /**
-   * Defines and returns the HTML that should be rendered within the webview panel.
-   *
-   * @remarks This is also the place where references to the Angular webview build files
-   * are created and inserted into the webview HTML.
-   *
-   * @param webview A reference to the extension webview
-   * @param extensionUri The URI of the directory containing the extension
-   * @returns A template string literal containing the HTML that should be
-   * rendered within the webview panel
-   */
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private _getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
     const stylesUri = getUri(webview, extensionUri, ["webview-ui", "build", "styles.css"]);
     const runtimeUri = getUri(webview, extensionUri, ["webview-ui", "build", "runtime.js"]);
@@ -118,13 +92,7 @@ export class HelloWorldPanel {
     `;
   }
 
-  /**
-   * Sets up an event listener to listen for messages passed from the webview context and
-   * executes code based on the message that is recieved.
-   *
-   * @param webview A reference to the extension webview
-   * @param context A reference to the extension context
-   */
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private _setWebviewMessageListener(webview: vscode.Webview) {
     webview.onDidReceiveMessage(
       (message: any) => {
@@ -142,6 +110,10 @@ export class HelloWorldPanel {
 
           case "headerAddBattonClick":
             this.openHeaderDialog();
+            return;
+
+          case "getAllMakefileInformation":
+            this.sendAllVariablesToUi();
             return;
         }
       },
@@ -161,11 +133,11 @@ export class HelloWorldPanel {
     vscode.window.showOpenDialog(opt).then((value) => {
       if(value !== undefined) {
         let list : string[] = [];
-
         for(let i = 0; i < value.length; i++) {
           let newRelativePath = path.relative(this.workspacePath, value[i].path); // BUG back separator
           this.sendMsgAddPath("addNewCSrcLine", newRelativePath);
           list.push(newRelativePath);
+          this.cSrcList.push(newRelativePath);
         }
 
         this.makefileReader.addValuesInVariable(this.makefileReader.cSourceMakeVar, list);
@@ -183,8 +155,12 @@ export class HelloWorldPanel {
 
     vscode.window.showOpenDialog(opt).then((value) => {
       if(value !== undefined) {
+        let list : string[] = [];
         for(let i = 0; i < value.length; i++) {
-          this.sendMsgAddPath("addNewCppSrcLine", value[i].path);
+          let newRelativePath = path.relative(this.workspacePath, value[i].path); // BUG back separator
+          this.sendMsgAddPath("addNewCppSrcLine", newRelativePath);
+          list.push(newRelativePath);
+          this.cppSrcList.push(newRelativePath);
         }
       }
     });
@@ -202,8 +178,12 @@ export class HelloWorldPanel {
 
     vscode.window.showOpenDialog(opt).then((value) => {
       if(value !== undefined) {
+        let list : string[] = [];
         for(let i = 0; i < value.length; i++) {
-          this.sendMsgAddPath("addNewHeaderFolderLine", value[i].path);
+          let newRelativePath = path.relative(this.workspacePath, value[i].path); // BUG back separator
+          this.sendMsgAddPath("addNewHeaderFolderLine", newRelativePath);
+          list.push(newRelativePath);
+          this.incList.push(newRelativePath);
         }
       }
     });
@@ -221,19 +201,22 @@ export class HelloWorldPanel {
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private initMakefileVariables() {
-    let cSrcList = this.makefileReader.getCSourcePaths();
-    let cppSrcList = this.makefileReader.getCppSourcePaths();
-    let cIncList = this.makefileReader.getIncludePaths();
+    this.cSrcList = this.makefileReader.getCSourcePaths();
+    this.cppSrcList = this.makefileReader.getCppSourcePaths();
+    this.incList = this.makefileReader.getIncludePaths();
+  }
 
-    cSrcList.forEach(element => {
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  private sendAllVariablesToUi() {
+    this.cSrcList.forEach(element => {
       this.sendMsgAddPath("addNewCSrcLine", element);
     });
 
-    cppSrcList.forEach(element => {
+    this.cppSrcList.forEach(element => {
       this.sendMsgAddPath("addNewCppSrcLine", element);
     });
 
-    cIncList.forEach(element => {
+    this.incList.forEach(element => {
       this.sendMsgAddPath("addNewHeaderFolderLine", element);
     });
   }

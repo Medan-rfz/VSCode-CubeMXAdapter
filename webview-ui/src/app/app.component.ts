@@ -1,7 +1,5 @@
 import { Component } from "@angular/core";
 import { vscode } from "./utilities/vscode";
-import * as vscodeLib from "vscode";
-//import * as tetsExp from "../../../src/app/Handlers";
 
 
 @Component({
@@ -15,49 +13,44 @@ export class AppComponent {
   cppSrcFiles : string[] = [];
   headerFolders : string[] = [];
 
+  selectedCSrc : any;
+
   constructor() {
     this._createListenerCommands();
+    this.sendCommand("getAllMakefileInformation");
   };
 
-  cSrcAddClick() {
-    vscode.postMessage({
-      command: "cSrcAddBattonClick",
-      text: "",
-    });
-  }
-
-  cppSrcAddClick() {
-    vscode.postMessage({
-      command: "cppSrcAddBattonClick",
-      text: "",
-    });
-  }
-
-  headerAddClick() {
-    vscode.postMessage({
-      command: "headerAddBattonClick",
-      text: "",
-    });
-  }
-
   private _createListenerCommands() {
-    window.addEventListener('message', event => {
+    window.addEventListener("message", event => {
       const message = event.data;
 
       switch (message.command) {
-        case 'addNewCSrcLine':
+        case "addNewCSrcLine":
           this.cSrcFiles.push(message.text);
           break;
 
-        case 'addNewCppSrcLine':
+        case "addNewCppSrcLine":
           this.cppSrcFiles.push(message.text);
           break;
 
-        case 'addNewHeaderFolderLine':
+        case "addNewHeaderFolderLine":
           this.headerFolders.push(message.text);
           break;
       }
     });
+  }
+
+  public sendCommand(command : string) {
+    vscode.postMessage({
+      command: command,
+      text: "",
+    });
+  }
+
+  public selectCSrcChanged(event : Event) {
+    //event.target.
+
+    return;
   }
 }
 

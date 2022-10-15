@@ -1,6 +1,6 @@
 <main>
 
-  <h1>CubeMX adapter</h1>
+  <h1>{{title}}</h1>
 
   <div>
     <h3>C source files</h3>
@@ -9,15 +9,14 @@
     </label>
 
     <div class="container-horizontal-stack">
-      <select multiple>
+      <select multiple (change)="selectCSrcChanged($event)">
         <option *ngFor="let item of cSrcFiles">{{item}}</option>
       </select>
       
       <div class="container-vertical-stack">
-        <button class="button-file-manipulation" (click)="cSrcAddClick()">Add</button>
+        <button class="button-file-manipulation" (click)="sendCommand('cSrcAddBattonClick')">Add</button>
         <button class="button-file-manipulation">Edit</button>
-        <button class="button-file-manipulation">Delete</button>
-        
+        <button class="button-file-manipulation" (click)="sendCommand('cSrcDeleteBattonClick')">Delete</button>
       </div>
     </div>
   </div>
@@ -34,10 +33,9 @@
       </select>
       
       <div class="container-vertical-stack">
-        <button class="button-file-manipulation" (click)="cppSrcAddClick()">Add</button>
+        <button class="button-file-manipulation" (click)="sendCommand('cppSrcAddBattonClick')">Add</button>
         <button class="button-file-manipulation">Edit</button>
         <button class="button-file-manipulation">Delete</button>
-        
       </div>
     </div>
   </div>
@@ -54,12 +52,13 @@
       </select>
       
       <div class="container-vertical-stack">
-        <button class="button-file-manipulation" (click)="headerAddClick()">Add</button>
+        <button class="button-file-manipulation" (click)="sendCommand('headerAddBattonClick')">Add</button>
         <button class="button-file-manipulation">Edit</button>
         <button class="button-file-manipulation">Delete</button>
-        
       </div>
     </div>
   </div>
+
+  <file-viewer></file-viewer>
 
 </main>
