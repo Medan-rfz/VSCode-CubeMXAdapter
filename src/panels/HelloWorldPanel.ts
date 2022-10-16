@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import * as vscode from "vscode";
 import { getUri } from "../utilities/getUri";
 import * as path from 'path';
 import {MakefileReader} from '../app/MakefileReader';
-
-
 
 export class HelloWorldPanel {
   public static currentPanel: HelloWorldPanel | undefined;
@@ -134,7 +131,7 @@ export class HelloWorldPanel {
       if(value !== undefined) {
         let list : string[] = [];
         for(let i = 0; i < value.length; i++) {
-          let newRelativePath = path.relative(this.workspacePath, value[i].path); // BUG back separator
+          let newRelativePath = path.relative(this.workspacePath, value[i].path).replace(/\\/g, '/');
           this.sendMsgAddPath("cSrcFiles_addNewLine", newRelativePath);
           list.push(newRelativePath);
           this.cSrcList.push(newRelativePath);
@@ -157,7 +154,7 @@ export class HelloWorldPanel {
       if(value !== undefined) {
         let list : string[] = [];
         for(let i = 0; i < value.length; i++) {
-          let newRelativePath = path.relative(this.workspacePath, value[i].path); // BUG back separator
+          let newRelativePath = path.relative(this.workspacePath, value[i].path).replace(/\\/g, '/');
           this.sendMsgAddPath("cppSrcFiles_addNewLine", newRelativePath);
           list.push(newRelativePath);
           this.cppSrcList.push(newRelativePath);
@@ -180,7 +177,7 @@ export class HelloWorldPanel {
       if(value !== undefined) {
         let list : string[] = [];
         for(let i = 0; i < value.length; i++) {
-          let newRelativePath = path.relative(this.workspacePath, value[i].path); // BUG back separator
+          let newRelativePath = path.relative(this.workspacePath, value[i].path).replace(/\\/g, '/');
           this.sendMsgAddPath("incFiles_addNewLine", newRelativePath);
           list.push(newRelativePath);
           this.incList.push(newRelativePath);

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
+import {TextFile} from './TextFile';
 
 export class MakefileReader {
-
     public asmSourceMakeVar : string = "ASM_SOURCES";
     public cSourceMakeVar : string = "C_SOURCES";
     public cppSourceMakeVar : string = "CPP_SOURCES";
@@ -13,9 +13,13 @@ export class MakefileReader {
     public optimizationMakeVar : string = "OPT";
 
     public makefilePath : string = '';
+    //public file : TextFile; // TODO
 
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     constructor(pathFile : string) {
         this.makefilePath = pathFile;
+        //this.file = new TextFile(pathFile); // TODO
     }
 
     /* Getter block */
@@ -43,16 +47,16 @@ export class MakefileReader {
         let indVar = makefile.indexOf(varName, 0);
         if(indVar === -1) {
             return list;
-        } 
+        }
         
-        indVar = this.getIndexEndLine(makefile, indVar);
+        indVar = this.getIndexBeginNextLine(makefile, indVar);
 
         while(true) {
-            let line = this.getStringLine(makefile, indVar);
+            let line = this.getLine(makefile, indVar);
             indVar += line.length;
-            let path : string = line.replace(' ', '');
-            path = path.replace('\\', '');
-            path = path.replace('\r\n', '');
+            let path : string = line.replace(/ /g, '');
+            path = path.replace(/\\/g, '');
+            path = path.replace(/\r\n/g, '');
             list.push(path);
             
             if(line.substring(line.length - 3) !== '\\\r\n') {
@@ -68,11 +72,11 @@ export class MakefileReader {
         let makefile : string = fs.readFileSync(this.makefilePath, 'utf-8');
         let indVar = this.getBeginLastLineFromStr(makefile, varName);
         if(indVar === -1) {
-            return -1; // TODO Add return status
+            return -1;
         } 
 
-        const endLine = this.getStringLine(makefile, indVar);
-        let newLines = endLine.replace('\r\n', '\\\r\n');
+        const endLine = this.getLine(makefile, indVar);
+        let newLines = endLine.replace(/\r\n/g, '\\\r\n');
 
         values.forEach((newLine, index, array) => {
             if(index !== (values.length - 1)) {
@@ -88,15 +92,36 @@ export class MakefileReader {
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public deleteValuesInVariable(varName : string, values : string[]) {
+        let makefile : string = fs.readFileSync(this.makefilePath, 'utf-8');
+        let indVar = makefile.indexOf(varName, 0);
+        if(indVar === -1) {
+            return -1;
+        }
+
+        indVar = this.getIndexBeginLine(makefile, 1111);
+
+        //indVar = this.getIndexBeginNextLine(makefile, indVar);
+
+        //makefile = this.deleteLine(makefile, indVar);
+        //fs.writeFileSync(this.makefilePath, makefile, 'utf-8');
+
+        // values.forEach((newLine, index, array) => {
+
+        
+        // });
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     private getBeginLastLine(varName : string) : number {
         let makefile : string = fs.readFileSync(this.makefilePath, 'utf-8');
         let indVar = makefile.indexOf(varName, 0);
         if(indVar === -1) {
-            return -1; // TODO Add return status
+            return -1;
         }
         
         while(true) {
-            let line = this.getStringLine(makefile, indVar);
+            let line = this.getLine(makefile, indVar);
             
             if(line.substring(line.length - 3) !== '\\\r\n') {
                 return indVar;
@@ -110,11 +135,11 @@ export class MakefileReader {
     private getBeginLastLineFromStr(makefile : string, varName : string) : number {
         let indVar = makefile.indexOf(varName, 0);
         if(indVar === -1) {
-            return -1; // TODO Add return status
+            return -1;
         }
         
         while(true) {
-            let line = this.getStringLine(makefile, indVar);
+            let line = this.getLine(makefile, indVar);
             
             if(line.substring(line.length - 3) !== '\\\r\n') {
                 return indVar;
@@ -133,18 +158,40 @@ export class MakefileReader {
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     private insertSubstring(str : string, subString : string, begin : number) : string {
-        return (str.slice(0,begin) + subString + str.slice(begin));
+        return str.slice(0,begin) + subString + str.slice(begin);
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    private getIndexEndLine(str : string, begin : number) : number {
-        return str.indexOf('\n', begin) + 1;
+    private deleteSubstring(str : string, subString : string, begin : number) : string {
+        return str.replace(subString, '');
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    private getStringLine(str : string, begin : number) : string {
-        let end = this.getIndexEndLine(str, begin);
+    private getIndexBeginLine(str : string, index : number) : number {
+        let beginInd = index;
+        while(beginInd >= 0) {
+            if(str[beginInd--] === '\n') {
+                return beginInd + 1;
+            }
+        };
+        return -1;
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    private getIndexBeginNextLine(str : string, index : number) : number {
+        return str.indexOf('\n', index) + 1;
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    private getLine(str : string, begin : number) : string {
+        let end = this.getIndexBeginNextLine(str, begin);
         return str.substring(begin, end);
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    private deleteLine(str : string, begin : number) : string {
+        let end = this.getIndexBeginNextLine(str, begin);
+        return str.slice(0,begin) + str.slice(end);
     }
 };
 
