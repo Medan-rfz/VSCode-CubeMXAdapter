@@ -112,6 +112,10 @@ export class HelloWorldPanel {
           case "getAllMakefileInformation":
             this.sendAllVariablesToUi();
             return;
+
+          case "cSrcFiles_clickDeleteButton":
+            this.makefileReader.deleteValuesInVariable(this.makefileReader.cSourceMakeVar, [this.cSrcList[1], this.cSrcList[2]]);
+            return;
         }
       },
       undefined,
