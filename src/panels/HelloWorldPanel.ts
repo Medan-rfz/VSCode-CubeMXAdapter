@@ -24,12 +24,10 @@ export class HelloWorldPanel {
     this._setWebviewMessageListener(this._panel.webview);
 
     if(vscode.workspace.workspaceFolders !== undefined) {
-      this.workspacePath = vscode.workspace.workspaceFolders[0].uri.path;
+      this.workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
     }
 
-    this.makefileReader = new MakefileReader(this.workspacePath.slice(1) + '/' + 'Makefile');
-    // TODO Check exist file
-
+    this.makefileReader = new MakefileReader(this.workspacePath + "/Makefile");
     this.initMakefileVariables();
   }
 
