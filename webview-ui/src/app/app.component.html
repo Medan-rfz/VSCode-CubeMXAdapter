@@ -2,63 +2,6 @@
 
   <h1>{{title}}</h1>
 
-  <div>
-    <h3>C source files</h3>
-    <label>
-      This section is responsible for connecting source files to the current project  
-    </label>
-
-    <div class="container-horizontal-stack">
-      <select multiple (change)="selectCSrcChanged($event)">
-        <option *ngFor="let item of cSrcFiles">{{item}}</option>
-      </select>
-      
-      <div class="container-vertical-stack">
-        <button class="button-file-manipulation" (click)="sendCommand('cSrcAddBattonClick')">Add</button>
-        <button class="button-file-manipulation">Edit</button>
-        <button class="button-file-manipulation" (click)="sendCommand('cSrcDeleteBattonClick')">Delete</button>
-      </div>
-    </div>
-  </div>
-
-  <div>
-    <h3>C++ source files</h3>
-    <label>
-      This section is responsible for connecting source files to the current project  
-    </label>
-
-    <div class="container-horizontal-stack">
-      <select multiple>
-        <option *ngFor="let item of cppSrcFiles">{{item}}</option>
-      </select>
-      
-      <div class="container-vertical-stack">
-        <button class="button-file-manipulation" (click)="sendCommand('cppSrcAddBattonClick')">Add</button>
-        <button class="button-file-manipulation">Edit</button>
-        <button class="button-file-manipulation">Delete</button>
-      </div>
-    </div>
-  </div>
-
-  <div>
-    <h3>Header folders</h3>
-    <label>
-      This section is responsible for connecting source files to the current project  
-    </label>
-
-    <div class="container-horizontal-stack">
-      <select multiple>
-        <option *ngFor="let item of headerFolders">{{item}}</option>
-      </select>
-      
-      <div class="container-vertical-stack">
-        <button class="button-file-manipulation" (click)="sendCommand('headerAddBattonClick')">Add</button>
-        <button class="button-file-manipulation">Edit</button>
-        <button class="button-file-manipulation">Delete</button>
-      </div>
-    </div>
-  </div>
-
-  <file-viewer></file-viewer>
+  <var-viewer *ngFor = "let variable of varViewer" [variableInfo]="variable"></var-viewer>
 
 </main>

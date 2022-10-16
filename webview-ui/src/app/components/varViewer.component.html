@@ -1,0 +1,16 @@
+  <div class="main-container">
+    <h3>{{variableInfo.title}}</h3>
+    <label> {{variableInfo.description}} </label>
+
+    <div class="container-horizontal-stack">
+      <select multiple (change)="selectCSrcChanged($event)">
+        <option *ngFor="let item of contentList">{{item}}</option>
+      </select>
+      
+      <div class="container-vertical-stack">
+        <button class="button-file-manipulation" *ngIf="variableInfo.isButtonAdd" (click)="clickAddButton()">Add</button>
+        <button class="button-file-manipulation" *ngIf="variableInfo.isButtonEdit" (click)="clickEditButton()">Edit</button>
+        <button class="button-file-manipulation" *ngIf="variableInfo.isButtonDelete" (click)="clickDeleteButton()">Delete</button>
+      </div>
+    </div>
+  </div>

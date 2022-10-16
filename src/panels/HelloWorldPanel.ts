@@ -100,15 +100,15 @@ export class HelloWorldPanel {
         const text = message.text;
 
         switch (command) {
-          case "cSrcAddBattonClick":
+          case "cSrcFiles_clickAddButton":
             this.openCSourceDialog();
             return;
           
-          case "cppSrcAddBattonClick":
+          case "cppSrcFiles_clickAddButton":
             this.openCppSourceDialog();
             return;
 
-          case "headerAddBattonClick":
+          case "incFiles_clickAddButton":
             this.openHeaderDialog();
             return;
 
@@ -135,7 +135,7 @@ export class HelloWorldPanel {
         let list : string[] = [];
         for(let i = 0; i < value.length; i++) {
           let newRelativePath = path.relative(this.workspacePath, value[i].path); // BUG back separator
-          this.sendMsgAddPath("addNewCSrcLine", newRelativePath);
+          this.sendMsgAddPath("cSrcFiles_addNewLine", newRelativePath);
           list.push(newRelativePath);
           this.cSrcList.push(newRelativePath);
         }
@@ -158,7 +158,7 @@ export class HelloWorldPanel {
         let list : string[] = [];
         for(let i = 0; i < value.length; i++) {
           let newRelativePath = path.relative(this.workspacePath, value[i].path); // BUG back separator
-          this.sendMsgAddPath("addNewCppSrcLine", newRelativePath);
+          this.sendMsgAddPath("cppSrcFiles_addNewLine", newRelativePath);
           list.push(newRelativePath);
           this.cppSrcList.push(newRelativePath);
         }
@@ -181,7 +181,7 @@ export class HelloWorldPanel {
         let list : string[] = [];
         for(let i = 0; i < value.length; i++) {
           let newRelativePath = path.relative(this.workspacePath, value[i].path); // BUG back separator
-          this.sendMsgAddPath("addNewHeaderFolderLine", newRelativePath);
+          this.sendMsgAddPath("incFiles_addNewLine", newRelativePath);
           list.push(newRelativePath);
           this.incList.push(newRelativePath);
         }
@@ -209,15 +209,15 @@ export class HelloWorldPanel {
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private sendAllVariablesToUi() {
     this.cSrcList.forEach(element => {
-      this.sendMsgAddPath("addNewCSrcLine", element);
+      this.sendMsgAddPath("cSrcFiles_addNewLine", element);
     });
 
     this.cppSrcList.forEach(element => {
-      this.sendMsgAddPath("addNewCppSrcLine", element);
+      this.sendMsgAddPath("cppSrcFiles_addNewLine", element);
     });
 
     this.incList.forEach(element => {
-      this.sendMsgAddPath("addNewHeaderFolderLine", element);
+      this.sendMsgAddPath("incFiles_addNewLine", element);
     });
   }
 }

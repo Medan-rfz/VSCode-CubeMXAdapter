@@ -1,4 +1,6 @@
 import { Component } from "@angular/core";
+import { variableViewers } from "./data/variableViewers";
+import { IVaribleViewer } from "./models/variableViewer";
 import { vscode } from "./utilities/vscode";
 
 
@@ -8,18 +10,20 @@ import { vscode } from "./utilities/vscode";
   styleUrls: ["./app.component.css"],
 })
 export class AppComponent {
-  title = "CubeMXAdapt";
+  title = "CubeMX adapter";
   cSrcFiles : string[] = [];
   cppSrcFiles : string[] = [];
   headerFolders : string[] = [];
 
-  selectedCSrc : any;
+  varViewer : IVaribleViewer[] = variableViewers;
 
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   constructor() {
     this._createListenerCommands();
     this.sendCommand("getAllMakefileInformation");
   };
 
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private _createListenerCommands() {
     window.addEventListener("message", event => {
       const message = event.data;
@@ -40,6 +44,7 @@ export class AppComponent {
     });
   }
 
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public sendCommand(command : string) {
     vscode.postMessage({
       command: command,
@@ -47,6 +52,7 @@ export class AppComponent {
     });
   }
 
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public selectCSrcChanged(event : Event) {
     //event.target.
 

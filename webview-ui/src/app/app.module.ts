@@ -2,10 +2,10 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { AppComponent } from "./app.component";
-import { FileViewerComponent } from "./components/fileViewer.component";
+import { VarViewerComponent } from "./components/varViewer.component";
 
 @NgModule({
-  declarations: [AppComponent, FileViewerComponent],
+  declarations: [AppComponent, VarViewerComponent],
   imports: [BrowserModule],
   providers: [],
   bootstrap: [AppComponent],

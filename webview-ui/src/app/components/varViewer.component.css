@@ -1,0 +1,74 @@
+  
+div {
+  padding: 2px;
+}
+
+button {
+  color: var(--vscode-button-foreground);
+  background-color: var(--vscode-button-background);
+  border-color: var(--vscode-button-border);
+  border-width: 0px;
+  font-style: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  font-weight: var(--vscode-font-weight);
+  padding: 10px;
+  margin: 15px;
+}
+
+button:hover {
+  background-color: var(--vscode-button-hoverBackground);
+}
+
+textarea {
+  color: var(--vscode-input-foreground);
+  background-color: var(--vscode-input-background);
+  border-color: var(--vscode-focusBorder);
+  border-width: 1px;
+  white-space: nowrap;
+
+  min-width: 500px;
+  min-height: 150px;
+}
+
+select {
+  color: var(--vscode-input-foreground);
+  background-color: var(--vscode-input-background);
+  border-color: var(--vscode-focusBorder);
+  border-width: 1px;
+  overflow-x: scroll;
+
+  width: 35vw;
+  min-width: 30vw;
+  min-height: 150px;
+  max-height: 600px;
+
+  resize: both;
+}
+
+
+.button-file-manipulation {
+  display: flex;
+  min-width: 100px;
+  text-align: center;
+  margin: 5px 10px 2px 15px;
+}
+
+.main-container {
+  border: 1px solid var(--vscode-input-foreground);
+  padding: 20px;
+
+  width: 95vw;
+  max-width: 95vw;
+  max-height: 90vh;
+}
+
+.container-vertical-stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.container-horizontal-stack {
+  display: flex;
+  flex-direction: row;
+}
+
