@@ -16,18 +16,18 @@ export class VarViewerComponent {
     this._createListenerCommands();
   }
 
-    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    private _createListenerCommands() {
-      window.addEventListener("message", event => {
-        const message = event.data;
-  
-        switch (message.command) {
-          case this.variableInfo.prefixCmd + "_addNewLine":
-            this.contentList.push(message.text);
-            break;
-        }
-      });
-    }
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  private _createListenerCommands() {
+    window.addEventListener("message", event => {
+      const message = event.data;
+
+      switch (message.command) {
+        case this.variableInfo.prefixCmd + "_addNewLine":
+          this.contentList.push(message.text);
+          break;
+      }
+    });
+  }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   selectCSrcChanged(event : Event) {

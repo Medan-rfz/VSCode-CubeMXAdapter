@@ -51,12 +51,5 @@ export class AppComponent {
       text: "",
     });
   }
-
-  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-  public selectCSrcChanged(event : Event) {
-    //event.target.
-
-    return;
-  }
 }
 
