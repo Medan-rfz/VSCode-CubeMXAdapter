@@ -133,7 +133,7 @@ export class HelloWorldPanel {
       if(value !== undefined) {
         let list : string[] = [];
         for(let i = 0; i < value.length; i++) {
-          let newRelativePath = path.relative(this.workspacePath, value[i].path).replace(/\\/g, '/');
+          let newRelativePath = path.relative(this.workspacePath, value[i].fsPath).replace(/\\/g, '/');
           this.sendMsgAddPath("cSrcFiles_addNewLine", newRelativePath);
           list.push(newRelativePath);
           this.cSrcList.push(newRelativePath);

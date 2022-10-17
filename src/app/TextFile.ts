@@ -2,13 +2,12 @@ import * as fs from 'fs';
 
 export class TextFile {
     private filePath : string = '';
-    private lines : string[] = [];
+    public lines : string[] = [];
 
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     constructor(path : string) {
         this.filePath = path;
-        // TODO Check exsist file
         this.readFile();
     }
 
@@ -41,11 +40,24 @@ export class TextFile {
             return -1;
         }
         for(let i = begin - 1; i < this.lines.length; i++) {
-            if(this.lines[i].search(/C_SOURCES/) !== -1) {
+            if(this.lines[i].search(data) !== -1) {
                 return i + 1;
             }
         }
         return -1;
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public findAllLines(data : string | RegExp) : number[] {
+        let res : number[] = [];
+        let index = 1;
+
+        while(true) {
+            index = this.findLine(data, index);
+            if(index === -1) { break; }
+            res.push(index++);
+        }
+        return res;
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
