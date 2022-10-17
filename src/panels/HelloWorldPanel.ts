@@ -112,7 +112,7 @@ export class HelloWorldPanel {
             return;
 
           case "cSrcFiles_clickDeleteButton":
-            this.makefileReader.deleteValuesInVariable(this.makefileReader.cSourceMakeVar, [this.cSrcList[1], this.cSrcList[2]]);
+            //this.makefileReader.deleteValuesInVariable(this.makefileReader.cSourceMakeVar, [this.cSrcList[1], this.cSrcList[2]]);
             return;
         }
       },

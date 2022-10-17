@@ -4,7 +4,6 @@ export class TextFile {
     private filePath : string = '';
     public lines : string[] = [];
 
-
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     constructor(path : string) {
         this.filePath = path;
@@ -13,15 +12,13 @@ export class TextFile {
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public getLine(lineNumber : number) : string {
-        if(lineNumber <= this.lines.length) {
-            return this.lines[lineNumber - 1];
-        } else {
-            return '';
-        }
+        if((lineNumber <= 0) || (lineNumber > this.lines.length)) { return ''; }
+        return this.lines[lineNumber - 1];
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public setLine(lineNumber : number, newData : string) {
+        if((lineNumber <= 0) || (lineNumber > this.lines.length)) { return; }
         if(lineNumber <= this.lines.length) {
             this.lines[lineNumber - 1] = newData;
         }
@@ -29,16 +26,21 @@ export class TextFile {
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public addLine(lineNumber : number, newLine : string) {
+        if((lineNumber <= 0) || (lineNumber > this.lines.length)) { return; }
         if(lineNumber <= this.lines.length) {
             this.lines.splice(lineNumber - 1, 0, newLine);
         }
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public deleteLine(lineNumber : number) {
+        if((lineNumber <= 0) || (lineNumber > this.lines.length)) { return; }
+        this.lines.splice(lineNumber-1, 1);
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public findLine(data : string | RegExp, begin : number) : number {
-        if((begin <= 0) || (begin > this.lines.length)) {
-            return -1;
-        }
+        if((begin <= 0) || (begin > this.lines.length)) { return -1; }
         for(let i = begin - 1; i < this.lines.length; i++) {
             if(this.lines[i].search(data) !== -1) {
                 return i + 1;

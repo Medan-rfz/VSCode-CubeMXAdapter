@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import {TextFile} from './TextFile';
 
 export class MakefileReader {
@@ -15,10 +14,11 @@ export class MakefileReader {
     public makefilePath : string = '';
     public file : TextFile;
 
-
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     constructor(pathFile : string) {
         this.makefilePath = pathFile;
+
+        //let file = new TextFile(this.makefilePath);
     }
 
     /* Getter block */
@@ -86,7 +86,17 @@ export class MakefileReader {
         let variable = file.findLine(re, 1) + 1;
         if(variable === 0) { return; }
 
+        while(true) {
+            let line = file.getLine(variable++).replace(/ |\r|\n/g, '');
+            let endFlag = (line[line.length-1] === '\\') ? false : true;
+            line = line.replace(/\\/g, '');
 
+            for(let str of values) {
+                if(line === str) { file.deleteLine(--variable); }
+            }
+            
+            if(endFlag) {return;}
+        }
     }
 };
 
