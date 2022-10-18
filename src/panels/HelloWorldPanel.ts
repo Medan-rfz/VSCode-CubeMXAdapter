@@ -7,14 +7,8 @@ export class HelloWorldPanel {
   public static currentPanel: HelloWorldPanel | undefined;
   private readonly _panel: vscode.WebviewPanel;
   private _disposables: vscode.Disposable[] = [];
-
   private makefileReader : MakefileReader;
-
   private workspacePath : string = '';
-
-  private cSrcList : string[] = [];
-  private cppSrcList : string[] = [];
-  private incList : string[] = [];
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
@@ -28,7 +22,6 @@ export class HelloWorldPanel {
     }
 
     this.makefileReader = new MakefileReader(this.workspacePath + "/Makefile");
-    this.initMakefileVariables();
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -112,7 +105,18 @@ export class HelloWorldPanel {
             return;
 
           case "cSrcFiles_clickDeleteButton":
-            //this.makefileReader.deleteValuesInVariable(this.makefileReader.cSourceMakeVar, [this.cSrcList[1], this.cSrcList[2]]);
+            this.makefileReader.deleteValuesInVariable(this.makefileReader.cSourceMakeVar, text.split(','));
+            this.sendAllVariablesToUi();
+            return;
+
+          case "cppSrcFiles_clickDeleteButton":
+            this.makefileReader.deleteValuesInVariable(this.makefileReader.cppSourceMakeVar, text.split(','));
+            this.sendAllVariablesToUi();
+            return;
+
+          case "incFiles_clickDeleteButton":
+            this.makefileReader.deleteValuesInVariable(this.makefileReader.cIncludeMakeVar, text.split(','));
+            this.sendAllVariablesToUi();
             return;
         }
       },
@@ -134,11 +138,10 @@ export class HelloWorldPanel {
         let list : string[] = [];
         for(let i = 0; i < value.length; i++) {
           let newRelativePath = path.relative(this.workspacePath, value[i].fsPath).replace(/\\/g, '/');
-          this.sendMsgAddPath("cSrcFiles_addNewLine", newRelativePath);
           list.push(newRelativePath);
-          this.cSrcList.push(newRelativePath);
         }
 
+        this.sendMsgAddPaths("cSrcFiles_addNewLines", list);
         this.makefileReader.addValuesInVariable(this.makefileReader.cSourceMakeVar, list);
       }
     });
@@ -157,10 +160,11 @@ export class HelloWorldPanel {
         let list : string[] = [];
         for(let i = 0; i < value.length; i++) {
           let newRelativePath = path.relative(this.workspacePath, value[i].path).replace(/\\/g, '/');
-          this.sendMsgAddPath("cppSrcFiles_addNewLine", newRelativePath);
           list.push(newRelativePath);
-          this.cppSrcList.push(newRelativePath);
         }
+
+        this.sendMsgAddPaths("cppSrcFiles_addNewLines", list);
+        this.makefileReader.addValuesInVariable(this.makefileReader.cppSourceMakeVar, list);
       }
     });
   }
@@ -180,43 +184,32 @@ export class HelloWorldPanel {
         let list : string[] = [];
         for(let i = 0; i < value.length; i++) {
           let newRelativePath = path.relative(this.workspacePath, value[i].path).replace(/\\/g, '/');
-          this.sendMsgAddPath("incFiles_addNewLine", newRelativePath);
           list.push(newRelativePath);
-          this.incList.push(newRelativePath);
         }
+
+        this.sendMsgAddPaths("incFiles_addNewLines", list);
+        this.makefileReader.addValuesInVariable(this.makefileReader.cIncludeMakeVar, list);
       }
     });
   }
 
-  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-  private sendMsgAddRelativePath(cmd : string, fullPath : string) {
-      this._panel.webview.postMessage({command: cmd, text: path.relative(this.workspacePath, fullPath)});
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    private sendCmd(cmd : string) {
+      this._panel.webview.postMessage({command: cmd, text: ''});
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-  private sendMsgAddPath(cmd : string, path : string) {
-      this._panel.webview.postMessage({command: cmd, text: path});
-  }
-
-  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-  private initMakefileVariables() {
-    this.cSrcList = this.makefileReader.getCSourcePaths();
-    this.cppSrcList = this.makefileReader.getCppSourcePaths();
-    this.incList = this.makefileReader.getIncludePaths();
+  private sendMsgAddPaths(cmd : string, paths : string[]) {
+    this._panel.webview.postMessage({command: cmd, text: paths.toString()});
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private sendAllVariablesToUi() {
-    this.cSrcList.forEach(element => {
-      this.sendMsgAddPath("cSrcFiles_addNewLine", element);
-    });
-
-    this.cppSrcList.forEach(element => {
-      this.sendMsgAddPath("cppSrcFiles_addNewLine", element);
-    });
-
-    this.incList.forEach(element => {
-      this.sendMsgAddPath("incFiles_addNewLine", element);
-    });
+    this.sendCmd("cSrcFiles_allClear");
+    this.sendCmd("cppSrcFiles_allClear");
+    this.sendCmd("incFiles_allClear");
+    this.sendMsgAddPaths("cSrcFiles_addNewLines", this.makefileReader.getCSourcePaths());
+    this.sendMsgAddPaths("cppSrcFiles_addNewLines", this.makefileReader.getCppSourcePaths());
+    this.sendMsgAddPaths("incFiles_addNewLines", this.makefileReader.getIncludePaths());
   }
 }

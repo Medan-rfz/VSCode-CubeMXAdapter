@@ -87,15 +87,21 @@ export class MakefileReader {
         if(variable === 0) { return; }
 
         while(true) {
-            let line = file.getLine(variable++).replace(/ |\r|\n/g, '');
+            let line = file.getLine(variable++).replace(/ |\r|\n|-I|-D/g, '');
             let endFlag = (line[line.length-1] === '\\') ? false : true;
             line = line.replace(/\\/g, '');
-
             for(let str of values) {
-                if(line === str) { file.deleteLine(--variable); }
+                if(line === str) { 
+                    file.deleteLine(--variable);
+                    if(endFlag) {
+                        file.setLine(variable-1, file.getLine(variable-1).replace(/\\/g, ''));
+                    }
+                }
             }
-            
-            if(endFlag) {return;}
+            if(endFlag) {
+                file.saveFile();
+                return;
+            }
         }
     }
 };

@@ -10,6 +10,7 @@ import { vscode } from "../utilities/vscode";
 export class VarViewerComponent {
   @Input() variableInfo : IVaribleViewer;
   contentList : string[] = [];
+  selectedOption : string[]  = [];
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   constructor() {
@@ -22,16 +23,26 @@ export class VarViewerComponent {
       const message = event.data;
 
       switch (message.command) {
-        case this.variableInfo.prefixCmd + "_addNewLine":
-          this.contentList.push(message.text);
+        case this.variableInfo.prefixCmd + "_addNewLines":
+          this.contentList = this.contentList.concat(message.text.split(','));
+          break;
+
+        case this.variableInfo.prefixCmd + "_allClear":
+          this.contentList = [];
           break;
       }
     });
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-  selectCSrcChanged(event : Event) {
-
+  selectCSrcChanged(event : any) {
+    let list : string[] = [];
+    const values = event.target.selectedOptions;
+    const len = values.length;
+    for(let i = 0; i < len; i++) {
+      list.push(values[i].value);
+    }
+    this.selectedOption = list;
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -46,7 +57,7 @@ export class VarViewerComponent {
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public clickDeleteButton() {
-    this.sendCommand(this.variableInfo.prefixCmd + "_clickDeleteButton");
+    this.sendCommandText(this.variableInfo.prefixCmd + "_clickDeleteButton", this.selectedOption.toString());
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -54,6 +65,14 @@ export class VarViewerComponent {
     vscode.postMessage({
       command: command,
       text: "",
+    });
+  }
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  private sendCommandText(command : string, msgText : string) {
+    vscode.postMessage({
+      command: command,
+      text: msgText,
     });
   }
 
