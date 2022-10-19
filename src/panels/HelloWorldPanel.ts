@@ -141,8 +141,12 @@ export class HelloWorldPanel {
           list.push(newRelativePath);
         }
 
-        this.sendMsgAddPaths("cSrcFiles_addNewLines", list);
-        this.makefileReader.addValuesInVariable(this.makefileReader.cSourceMakeVar, list);
+        let existList = this.makefileReader.getVariableList(this.makefileReader.cSourceMakeVar);
+        list = this.exeptCompareItems(existList, list);
+        if(list.length !== 0) {
+          this.sendMsgAddPaths("cSrcFiles_addNewLines", list);
+          this.makefileReader.addValuesInVariable(this.makefileReader.cSourceMakeVar, list);
+        }
       }
     });
   }
@@ -159,12 +163,16 @@ export class HelloWorldPanel {
       if(value !== undefined) {
         let list : string[] = [];
         for(let i = 0; i < value.length; i++) {
-          let newRelativePath = path.relative(this.workspacePath, value[i].path).replace(/\\/g, '/');
+          let newRelativePath = path.relative(this.workspacePath, value[i].fsPath).replace(/\\/g, '/');
           list.push(newRelativePath);
         }
 
-        this.sendMsgAddPaths("cppSrcFiles_addNewLines", list);
-        this.makefileReader.addValuesInVariable(this.makefileReader.cppSourceMakeVar, list);
+        let existList = this.makefileReader.getVariableList(this.makefileReader.cppSourceMakeVar);
+        list = this.exeptCompareItems(existList, list);
+        if(list.length !== 0) {
+          this.sendMsgAddPaths("cppSrcFiles_addNewLines", list);
+          this.makefileReader.addValuesInVariable(this.makefileReader.cppSourceMakeVar, list);
+        }
       }
     });
   }
@@ -183,12 +191,17 @@ export class HelloWorldPanel {
       if(value !== undefined) {
         let list : string[] = [];
         for(let i = 0; i < value.length; i++) {
-          let newRelativePath = path.relative(this.workspacePath, value[i].path).replace(/\\/g, '/');
+          let newRelativePath = path.relative(this.workspacePath, value[i].fsPath).replace(/\\/g, '/');
           list.push(newRelativePath);
         }
 
-        this.sendMsgAddPaths("incFiles_addNewLines", list);
-        this.makefileReader.addValuesInVariable(this.makefileReader.cIncludeMakeVar, list);
+        let existList = this.makefileReader.getVariableList(this.makefileReader.cIncludeMakeVar);
+        existList = existList.map((value) => value.replace(/-I/g, ''));
+        list = this.exeptCompareItems(existList, list);
+        if(list.length !== 0) {
+          this.sendMsgAddPaths("incFiles_addNewLines", list);
+          this.makefileReader.addValuesInVariableWithPrefix(this.makefileReader.cIncludeMakeVar, "-I", list);
+        }
       }
     });
   }
@@ -212,4 +225,24 @@ export class HelloWorldPanel {
     this.sendMsgAddPaths("cppSrcFiles_addNewLines", this.makefileReader.getCppSourcePaths());
     this.sendMsgAddPaths("incFiles_addNewLines", this.makefileReader.getIncludePaths());
   }
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  private exeptCompareItems(existList : string[], addedList : string[]) : string[] {
+    let newList : string[] = [];
+
+    for(let addedItem of addedList) {
+      newList.push(addedItem);
+      for(let existItem of existList) {
+        if(addedItem === existItem) { 
+          newList.pop(); 
+        }
+      }
+    }
+
+    return newList;
+  }
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+
+
 }
