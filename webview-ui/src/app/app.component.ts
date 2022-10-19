@@ -3,7 +3,6 @@ import { variableViewers } from "./data/variableViewers";
 import { IVaribleViewer } from "./models/variableViewer";
 import { vscode } from "./utilities/vscode";
 
-
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
@@ -11,21 +10,21 @@ import { vscode } from "./utilities/vscode";
 })
 export class AppComponent {
   title = "CubeMX adapter";
-  cSrcFiles : string[] = [];
-  cppSrcFiles : string[] = [];
-  headerFolders : string[] = [];
-
-  varViewer : IVaribleViewer[] = variableViewers;
+  cSrcFiles: string[] = [];
+  cppSrcFiles: string[] = [];
+  headerFolders: string[] = [];
+  definesList: string[] = [];
+  varViewer: IVaribleViewer[] = variableViewers;
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   constructor() {
     this._createListenerCommands();
     this.sendCommand("getAllMakefileInformation");
-  };
+  }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private _createListenerCommands() {
-    window.addEventListener("message", event => {
+    window.addEventListener("message", (event) => {
       const message = event.data;
 
       switch (message.command) {
@@ -40,16 +39,19 @@ export class AppComponent {
         case "addNewHeaderFolderLine":
           this.headerFolders.push(message.text);
           break;
+
+        case "addNewDefinesLine":
+          this.definesList.push(message.text);
+          break;
       }
     });
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-  public sendCommand(command : string) {
+  public sendCommand(command: string) {
     vscode.postMessage({
       command: command,
       text: "",
     });
   }
 }
-
