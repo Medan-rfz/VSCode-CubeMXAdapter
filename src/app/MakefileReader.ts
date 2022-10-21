@@ -42,7 +42,7 @@ export class MakefileReader {
         let file = new TextFile(this.makefilePath);
         let lineIndex = this.getInxFirstLineOfVariable(file, varName);
         if(lineIndex === -1) { return []; }
-        let line = file.getLine(lineIndex).replace(/ |\r|\n/g, '');
+        let line = file.getLine(lineIndex-1).replace(/ |\r|\n/g, '');
         if(line[line.length-1] !== '\\') { return []; }
 
         while(true) {
