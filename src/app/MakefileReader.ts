@@ -40,12 +40,12 @@ export class MakefileReader {
     public getVariableList(varName : string) : string[] {
         let list : string[] = [];
         let file = new TextFile(this.makefilePath);
-        const re = new RegExp(varName + ' {0,10}=');
-        let variable = file.findLine(re, 1) + 1;
-        if(variable === 0) { return list; }
+        let lineIndex = this.getInxFirstLineOfVariable(file, varName);
+        let line = file.getLine(lineIndex).replace(/ |\r|\n/g, '');
+        if(line[line.length-1] !== '\\') { return []; }
 
         while(true) {
-            let line = file.getLine(variable++).replace(/ |\r|\n/g, '');
+            line = file.getLine(lineIndex++).replace(/ |\r|\n/g, '');
             let endFlag = (line[line.length-1] === '\\') ? false : true;
             line = line.replace(/\\/g, '');
             list.push(line);
@@ -56,13 +56,13 @@ export class MakefileReader {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public addValuesInVariable(varName : string, values : string[]) {
         let file = new TextFile(this.makefilePath);
-        let variable = this.getInxLastLineOfVariable(file, varName);
-        file.setLine(variable, file.getLine(variable).replace(/ |\r|\n/g, '') + ' \\');
-        variable++;
+        let lineIndex = this.getInxLastLineOfVariable(file, varName);
+        file.setLine(lineIndex, file.getLine(lineIndex).replace(/ |\r|\n/g, '') + ' \\');
+        lineIndex++;
 
         values.forEach((value, index, array) => {
-            if(index < (array.length - 1)) { file.addLine(variable++, value + ' \\'); }
-            else { file.addLine(variable++, value); }
+            if(index < (array.length - 1)) { file.addLine(lineIndex++, value + ' \\'); }
+            else { file.addLine(lineIndex++, value); }
         });
 
         file.saveFile();
@@ -71,14 +71,14 @@ export class MakefileReader {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public addValuesInVariableWithPrefix(varName : string, prefix : string, values : string[]) {
         let file = new TextFile(this.makefilePath);
-        let variable = this.getInxLastLineOfVariable(file, varName);
-        file.setLine(variable, file.getLine(variable).replace(/ |\r|\n/g, '') + ' \\');
-        variable++;
+        let lineIndex = this.getInxLastLineOfVariable(file, varName);
+        file.setLine(lineIndex, file.getLine(lineIndex).replace(/ |\r|\n/g, '') + ' \\');
+        lineIndex++;
 
         values.forEach((value, index, array) => {
             value = prefix + value;
-            if(index < (array.length - 1)) { file.addLine(variable++, value + ' \\'); }
-            else { file.addLine(variable++, value); }
+            if(index < (array.length - 1)) { file.addLine(lineIndex++, value + ' \\'); }
+            else { file.addLine(lineIndex++, value); }
         });
 
         file.saveFile();
@@ -87,19 +87,17 @@ export class MakefileReader {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public deleteValuesInVariable(varName : string, values : string[]) {
         let file = new TextFile(this.makefilePath);
-        const re = new RegExp(varName + ' {0,10}=');
-        let variable = file.findLine(re, 1) + 1;
-        if(variable === 0) { return; }
+        let lineIndex = this.getInxFirstLineOfVariable(file, varName);
 
         while(true) {
-            let line = file.getLine(variable++).replace(/ |\r|\n|-I|-D/g, '');
+            let line = file.getLine(lineIndex++).replace(/ |\r|\n|-I|-D/g, '');
             let endFlag = (line[line.length-1] === '\\') ? false : true;
             line = line.replace(/\\/g, '');
             for(let str of values) {
                 if(line === str) {
-                    file.deleteLine(--variable);
+                    file.deleteLine(--lineIndex);
                     if(endFlag) {
-                        file.setLine(variable-1, file.getLine(variable-1).replace(/\\/g, ''));
+                        file.setLine(lineIndex-1, file.getLine(lineIndex-1).replace(/\\/g, ''));
                     }
                 }
             }
@@ -111,16 +109,43 @@ export class MakefileReader {
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    private getInxLastLineOfVariable(openedFile : TextFile, varName : string) : number {
+    private getInxFirstLineOfVariable(openedFile : TextFile, varName : string) : number {
         const re = new RegExp(varName + ' {0,10}=');
         let index = openedFile.findLine(re, 1) + 1;
         if(index === 0) { return -1; }
+        else { return  index; }
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    private getInxLastLineOfVariable(openedFile : TextFile, varName : string) : number {
+        const re = new RegExp(varName + ' {0,10}=');
+        let index = openedFile.findLine(re, 1);
+        if(index === -1) { return -1; }
 
         while(true) {
             let line = openedFile.getLine(index++).replace(/ |\r|\n/g, '');
             if(line[line.length-1] !== '\\') { return index - 1; }
         }
     }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public getVariableListFromFile(file : TextFile, varName : string) : string[] {
+        let list : string[] = [];
+        const re = new RegExp(varName + ' {0,10}=');
+        let lineIndex = file.findLine(re, 1) + 1;
+        if(lineIndex === 0) { return list; }
+
+        while(true) {
+            let line = file.getLine(lineIndex++).replace(/ |\r|\n/g, '');
+            let endFlag = (line[line.length-1] === '\\') ? false : true;
+            line = line.replace(/\\/g, '');
+            list.push(line);
+            if(endFlag) { return list; }
+        }
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    //public addNewVariable
 };
 
 

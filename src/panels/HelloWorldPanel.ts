@@ -229,7 +229,6 @@ export class HelloWorldPanel {
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private exeptCompareItems(existList : string[], addedList : string[]) : string[] {
     let newList : string[] = [];
-
     for(let addedItem of addedList) {
       newList.push(addedItem);
       for(let existItem of existList) {
@@ -238,7 +237,6 @@ export class HelloWorldPanel {
         }
       }
     }
-
     return newList;
   }
 
