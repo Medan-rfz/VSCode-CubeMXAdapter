@@ -175,12 +175,14 @@ export class HelloWorldPanel {
           list.push(newRelativePath);
         }
 
-        let existList = this.makefileReader.getVariableList(this.makefileReader.cppSourceMakeVar);
-        list = this.exeptCompareItems(existList, list);
-        if(list.length !== 0) {
-          this.sendMsgAddPaths("cppSrcFiles_addNewLines", list);
-          this.makefileReader.addValuesInVariable(this.makefileReader.cppSourceMakeVar, list);
-        }
+        if(this.makefileReader.checkExistVariable(this.makefileReader.cppSourceMakeVar)) {
+          let existList = this.makefileReader.getVariableList(this.makefileReader.cppSourceMakeVar);
+          list = this.exeptCompareItems(existList, list);
+          if(list.length !== 0) {
+            this.sendMsgAddPaths("cppSrcFiles_addNewLines", list);
+            this.makefileReader.addValuesInVariable(this.makefileReader.cppSourceMakeVar, list);
+          }
+        }        
       }
     });
   }
@@ -224,8 +226,9 @@ export class HelloWorldPanel {
   private adaptForCpp() {
     this.makefileReader.addCppCompilerVar();
     this.makefileReader.addNewVariableAfter(this.makefileReader.cSourceMakeVar, this.makefileReader.cppSourceMakeVar);
-    this.makefileReader.addCppCompileTask();
+    this.makefileReader.addCppCompilerFlags();
     this.makefileReader.addCppObjectsVar();
+    this.makefileReader.addCppCompileTask();
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
