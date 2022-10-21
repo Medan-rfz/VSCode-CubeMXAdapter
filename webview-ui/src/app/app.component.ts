@@ -45,6 +45,16 @@ export class AppComponent {
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  public clickAdaptVSC() {
+    this.sendCommand("adaptPrjForVSC");
+  }
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  public clickAdaptCpp() {
+    this.sendCommand("adaptPrjForCpp");
+  }
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public sendCommand(command : string) {
     vscode.postMessage({
       command: command,

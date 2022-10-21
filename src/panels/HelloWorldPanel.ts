@@ -88,6 +88,14 @@ export class HelloWorldPanel {
         const text = message.text;
 
         switch (command) {
+          case "adaptPrjForVSC":
+            this.adaptForVSC();
+            return;
+
+          case "adaptPrjForCpp":
+            this.adaptForCpp();
+            return;
+
           case "cSrcFiles_clickAddButton":
             this.openCSourceDialog();
             return;
@@ -206,14 +214,30 @@ export class HelloWorldPanel {
     });
   }
 
-    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    private sendCmd(cmd : string) {
-      this._panel.webview.postMessage({command: cmd, text: ''});
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  private adaptForVSC() {
+    this.makefileReader.activateSilentMode();
+    this.makefileReader.activateEchoForCompilation();
+  }
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  private adaptForCpp() {
+    this.makefileReader.addCppCompilerVar();
+    this.makefileReader.addNewVariableAfter(this.makefileReader.cSourceMakeVar, this.makefileReader.cppSourceMakeVar);
+    this.makefileReader.addCppCompileTask();
+    this.makefileReader.addCppObjectsVar();
+  }
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  private sendCmd(cmd : string) {
+    this._panel.webview.postMessage({command: cmd, text: ''});
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private sendMsgAddPaths(cmd : string, paths : string[]) {
-    this._panel.webview.postMessage({command: cmd, text: paths.toString()});
+    if(paths.length !== 0) {
+      this._panel.webview.postMessage({command: cmd, text: paths.toString()});
+    }
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//

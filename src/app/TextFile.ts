@@ -33,6 +33,17 @@ export class TextFile {
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public addLines(lineNumber : number, newLines : string[]) {
+        if((lineNumber <= 0) || (lineNumber > this.lines.length)) { return; }
+        if(lineNumber <= this.lines.length) {
+            lineNumber--;
+            for(let line of newLines) {
+                this.lines.splice(lineNumber++, 0, line);
+            }
+        }
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public deleteLine(lineNumber : number) {
         if((lineNumber <= 0) || (lineNumber > this.lines.length)) { return; }
         this.lines.splice(lineNumber-1, 1);
@@ -48,7 +59,7 @@ export class TextFile {
         }
         return -1;
     }
-
+    
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public findAllLines(data : string | RegExp) : number[] {
         let res : number[] = [];

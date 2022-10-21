@@ -54,7 +54,7 @@ select {
 }
 
 .main-container {
-  border: 1px solid var(--vscode-input-foreground);
+  /* border: 1px solid var(--vscode-input-foreground); */
   padding: 20px;
 
   width: 95vw;

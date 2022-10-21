@@ -2,6 +2,16 @@
 
   <h1>{{title}}</h1>
 
-  <var-viewer *ngFor = "let variable of varViewer" [variableInfo]="variable"></var-viewer>
+  <div>
+    <div class="container-horizontal-stack">
+      <button (click)="clickAdaptVSC()">Adapt for VSCode</button>
+      <button *ngIf = "false" (click)="clickAdaptCpp()">Adapt for C++</button>
+    </div>
+  </div>
+
+  <div *ngFor = "let variable of varViewer">
+    <hr>
+    <var-viewer  [variableInfo]="variable"></var-viewer>
+  </div>
 
 </main>

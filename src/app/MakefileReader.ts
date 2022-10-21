@@ -145,7 +145,97 @@ export class MakefileReader {
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    //public addNewVariable
+    public addNewVariableAfter(afterVar : string, newVar : string) {
+        let file = new TextFile(this.makefilePath);
+        let indexVar = this.getInxFirstLineOfVariable(file, newVar);
+        if(indexVar === -1) {
+            let lineIndex = this.getInxLastLineOfVariable(file, afterVar) + 1;
+            file.addLines(lineIndex, ["", "", newVar + " ="]);
+            file.saveFile();
+        }
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public activateSilentMode() {
+        let file = new TextFile(this.makefilePath);
+        let indexAllMark = file.findLine(/.SILENT:/g, 1);
+        if(indexAllMark === -1) {
+            indexAllMark = file.findLine(/all:/g, 1);
+            file.addLine(indexAllMark, ".SILENT:");
+            file.saveFile();
+        }
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public activateEchoForCompilation() {
+        let file = new TextFile(this.makefilePath);
+        let index = file.findLine(/\$\(CC\) -c/g, 1);
+        if(index !== -1) {
+            let line = file.getLine(index+1).replace(/\t|\n|\r/g, '');
+            if(line !== "@echo $<") {
+                file.addLine(index+1, "\t@echo $<");
+                file.saveFile();
+            }
+        }
+
+        index = file.findLine(/\$\(AS\) -c/g, 1);
+        if(index !== -1) {
+            let line = file.getLine(index+1).replace(/\t|\n|\r/g, '');
+            if(line !== "@echo $<") {
+                file.addLine(index+1, "\t@echo $<");
+                file.saveFile();
+            }
+        }
+    }
+    
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public addCppCompileTask() {
+        let file = new TextFile(this.makefilePath);
+        let index = file.findLine(/\$\(BUILD_DIR\)\/%.o: %.s/g, 1);
+        if(index !== -1) {
+            if(file.findLine(/\$\(BUILD_DIR\)\/%.o: %.cpp/g, 1) === - 1) {
+                file.addLines(index, [
+                    "$(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)",
+                    "\t$(CCP) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@",
+                    "\t@echo $<",
+                    ""
+                ]);
+                file.saveFile();
+            }
+        }
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public addCppCompilerVar() {
+        let file = new TextFile(this.makefilePath);
+        let index = file.findLine(/CC =/g, 1);
+
+        while(index !== -1) {
+            let line = file.getLine(index+1);
+            if(line !== "CCP = $(GCC_PATH)/$(PREFIX)g++") {
+                file.addLine(index+1, "CCP = $(GCC_PATH)/$(PREFIX)g++");
+                file.saveFile();
+            }
+            index = file.findLine(/CC =/g, index+1);
+        }
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public addCppObjectsVar() {
+        let file = new TextFile(this.makefilePath);
+        let index = file.findLine(/vpath %.c/g, 1)+1;
+
+        if(index !== -1) {
+            if(file.findLine(/vpath %.cpp/g, 1) === - 1) {
+                file.addLines(index, [
+                    "OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(CPP_SOURCES:.cpp=.o)))",
+                    "vpath %.cpp $(sort $(dir $(CPP_SOURCES)))"
+                ]);
+                file.saveFile();
+            }
+        }
+    }
+    
 };
 
 
