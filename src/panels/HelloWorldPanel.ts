@@ -229,6 +229,7 @@ export class HelloWorldPanel {
     this.makefileReader.addCppCompilerFlags();
     this.makefileReader.addCppObjectsVar();
     this.makefileReader.addCppCompileTask();
+    this.makefileReader.changeLinker();
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//

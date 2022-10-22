@@ -31,7 +31,7 @@ export class MakefileReader {
     public getIncludePaths() : string[] {
         let list : string[] = this.getVariableList(this.cIncludeMakeVar);
         list.forEach((value, index, list) => {
-            list[index] = value.replace('-I', '');
+            list[index] = value.replace(/^-I/g, '');
         });
         return list;
     }
@@ -58,7 +58,7 @@ export class MakefileReader {
     public addValuesInVariable(varName : string, values : string[]) {
         let file = new TextFile(this.makefilePath);
         let lineIndex = this.getInxLastLineOfVariable(file, varName);
-        file.setLine(lineIndex, file.getLine(lineIndex).replace(/ |\r|\n/g, '') + ' \\');
+        file.setLine(lineIndex, file.getLine(lineIndex).replace(/\r|\n/g, '') + ' \\');
         lineIndex++;
 
         values.forEach((value, index, array) => {
@@ -73,7 +73,7 @@ export class MakefileReader {
     public addValuesInVariableWithPrefix(varName : string, prefix : string, values : string[]) {
         let file = new TextFile(this.makefilePath);
         let lineIndex = this.getInxLastLineOfVariable(file, varName);
-        file.setLine(lineIndex, file.getLine(lineIndex).replace(/ |\r|\n/g, '') + ' \\');
+        file.setLine(lineIndex, file.getLine(lineIndex).replace(/\r|\n/g, '') + ' \\');
         lineIndex++;
 
         values.forEach((value, index, array) => {
@@ -91,8 +91,8 @@ export class MakefileReader {
         let lineIndex = this.getInxFirstLineOfVariable(file, varName);
 
         while(true) {
-            let line = file.getLine(lineIndex++).replace(/ |\r|\n|-I|-D/g, '');
-            let endFlag = (line[line.length-1] === '\\') ? false : true;
+            let line = file.getLine(lineIndex++).replace(/\s|\r|\n|^-I|^-D/g, '');
+            let endFlag = (line[line.length-1].match(/\\$/) !== null) ? false : true;
             line = line.replace(/\\/g, '');
             for(let str of values) {
                 if(line === str) {
@@ -111,7 +111,7 @@ export class MakefileReader {
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     private getInxFirstLineOfVariable(openedFile : TextFile, varName : string) : number {
-        const re = new RegExp(varName + ' {0,10}=');
+        const re = new RegExp("^" + varName + "\\s*=", 'g');
         let index = openedFile.findLine(re, 1) + 1;
         if(index === 0) { return -1; }
         else { return  index; }
@@ -119,13 +119,13 @@ export class MakefileReader {
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     private getInxLastLineOfVariable(openedFile : TextFile, varName : string) : number {
-        const re = new RegExp(varName + ' {0,10}=');
+        const re = new RegExp("^" + varName + "\\s*=", 'g');
         let index = openedFile.findLine(re, 1);
         if(index === -1) { return -1; }
 
         while(true) {
-            let line = openedFile.getLine(index++).replace(/ |\r|\n/g, '');
-            if(line[line.length-1] !== '\\') { return index - 1; }
+            let line = openedFile.getLine(index++).replace(/\s|\r|\n/g, '');
+            if(line[line.length-1].match(/\\$/) === null) { return index - 1; }
         }
     }
 
@@ -139,13 +139,13 @@ export class MakefileReader {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public getVariableListFromFile(file : TextFile, varName : string) : string[] {
         let list : string[] = [];
-        const re = new RegExp(varName + ' {0,10}=');
+        const re = new RegExp("^" + varName + "\\s*=", 'g');
         let lineIndex = file.findLine(re, 1) + 1;
         if(lineIndex === 0) { return list; }
 
         while(true) {
             let line = file.getLine(lineIndex++).replace(/ |\r|\n/g, '');
-            let endFlag = (line[line.length-1] === '\\') ? false : true;
+            let endFlag = (line[line.length-1].match(/\\$/) !== null) ? false : true;
             line = line.replace(/\\/g, '');
             list.push(line);
             if(endFlag) { return list; }
@@ -166,9 +166,9 @@ export class MakefileReader {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public activateSilentMode() {
         let file = new TextFile(this.makefilePath);
-        let indexAllMark = file.findLine(/.SILENT:/g, 1);
+        let indexAllMark = file.findLine(/^.SILENT:/g, 1);
         if(indexAllMark === -1) {
-            indexAllMark = file.findLine(/all:/g, 1);
+            indexAllMark = file.findLine(/^all:/g, 1);
             file.addLine(indexAllMark, ".SILENT:");
             file.saveFile();
         }
@@ -177,20 +177,18 @@ export class MakefileReader {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public activateEchoForCompilation() {
         let file = new TextFile(this.makefilePath);
-        let index = file.findLine(/\$\(CC\) -c/g, 1);
+        let index = file.findLine(/\$\(CC\)\s-c/g, 1);
         if(index !== -1) {
-            let line = file.getLine(index+1).replace(/\t|\n|\r/g, '');
-            if(line !== "@echo $<") {
-                file.addLine(index+1, "\t@echo $<");
+            if(file.getLine(index+1).match(/^\t@echo \$\(CC\): \$</) === null) {
+                file.addLine(index+1, "\t@echo $(CC): $<");
                 file.saveFile();
             }
         }
 
-        index = file.findLine(/\$\(AS\) -c/g, 1);
+        index = file.findLine(/\$\(AS\)\s-c/g, 1);
         if(index !== -1) {
-            let line = file.getLine(index+1).replace(/\t|\n|\r/g, '');
-            if(line !== "@echo $<") {
-                file.addLine(index+1, "\t@echo $<");
+            if(file.getLine(index+1).match(/^\t@echo \$\(AS\): \$</) === null) {            
+                file.addLine(index+1, "\t@echo $(AS): $<");
                 file.saveFile();
             }
         }
@@ -199,18 +197,16 @@ export class MakefileReader {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public addCppCompilerVar() {
         let file = new TextFile(this.makefilePath);
-        let index = file.findLine(/CC =/g, 1);
+        let index = file.findLine(/^CC\s*=/g, 1);
         if(index !== -1) {
-            let line = file.getLine(index+1);
-            if(line !== "CXX = $(GCC_PATH)/$(PREFIX)g++") {
+            if(file.findLine(/CXX = \$\(GCC_PATH\)\/\$\(PREFIX\)g\+\+/g, 1) === -1) {
                 file.addLine(index+1, "CXX = $(GCC_PATH)/$(PREFIX)g++");
                 file.saveFile();
             }
         }
-        index = file.findLine(/CC =/g, index+1);
+        index = file.findLine(/^CC\s*=/g, index+1);
         if(index !== -1) {
-            let line = file.getLine(index+1);
-            if(line !== "CXX = $(PREFIX)g++") {
+            if(file.findLine(/CXX = \$\(PREFIX\)g\+\+/g, 1) === -1) {
                 file.addLine(index+1, "CXX = $(PREFIX)g++");
                 file.saveFile();
             }
@@ -220,9 +216,9 @@ export class MakefileReader {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public addCppCompilerFlags() {
         let file = new TextFile(this.makefilePath);
-        let index = file.findLine(/ASFLAGS.{0,5}=/g, 1);
+        let index = file.findLine(/^ASFLAGS\s*=/g, 1);
         if(index !== -1) {
-            let check = file.findLine(/CXXFLAGS =/g, 1);
+            let check = file.findLine(/^CXXFLAGS\s*=/g, 1);
             if(check === -1) {
                 file.addLines(index+1, [
                     "",
@@ -241,10 +237,10 @@ export class MakefileReader {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public addCppObjectsVar() {
         let file = new TextFile(this.makefilePath);
-        let index = file.findLine(/vpath %.c/g, 1)+1;
+        let index = file.findLine(/^vpath %.c/g, 1)+1;
 
         if(index !== -1) {
-            if(file.findLine(/vpath %.cpp/g, 1) === - 1) {
+            if(file.findLine(/^vpath %.cpp/g, 1) === -1) {
                 file.addLines(index, [
                     "OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(CXX_SOURCES:.cpp=.o)))",
                     "vpath %.cpp $(sort $(dir $(CXX_SOURCES)))"
@@ -263,16 +259,22 @@ export class MakefileReader {
                 file.addLines(index, [
                     "$(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)",
                     "\t$(CXX) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@",
-                    "\t@echo $<",
+                    "\t@echo $(CXX): $<",
                     ""
                 ]);
                 file.saveFile();
             }
         }
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public changeLinker() {
+        let file = new TextFile(this.makefilePath);
+        let index = file.findLine(/^\$\(BUILD_DIR\)\/\$\(TARGET\)\.elf:/g, 1);
+        if(index !== -1) {
+            index++;
+            file.setLine(index, file.getLine(index).replace(/\$\(CC\)/, '$(CXX)'));
+            file.saveFile();
+        }
     }    
 };
-
-
-
-
-

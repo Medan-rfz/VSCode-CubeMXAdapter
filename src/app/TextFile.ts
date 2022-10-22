@@ -13,7 +13,7 @@ export class TextFile {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public getLine(lineNumber : number) : string {
         if((lineNumber <= 0) || (lineNumber > this.lines.length)) { return ''; }
-        return this.lines[lineNumber - 1];
+        return this.lines[lineNumber - 1].replace(/\r|\n/g, '');
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -83,8 +83,9 @@ export class TextFile {
     public saveFile() {
         let data : string = "";
 
-        this.lines.forEach(element => {
-            data += element + "\n";
+        this.lines.forEach((element, index, array) => {
+            data += element;
+            if(index !== (array.length - 1)) { data += "\n"}
         });
 
         fs.writeFileSync(this.filePath, data, 'utf-8');
