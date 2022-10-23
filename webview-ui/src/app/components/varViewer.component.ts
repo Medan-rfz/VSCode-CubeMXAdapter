@@ -35,7 +35,7 @@ export class VarViewerComponent {
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-  selectCSrcChanged(event : any) {
+  public selectChanged(event : any) {
     let list : string[] = [];
     const values = event.target.selectedOptions;
     const len = values.length;

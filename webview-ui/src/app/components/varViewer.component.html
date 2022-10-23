@@ -3,7 +3,7 @@
     <label> {{variableInfo.description}} </label>
 
     <div class="container-horizontal-stack">
-      <select multiple  (change)="selectCSrcChanged($event)">
+      <select multiple  (change)="selectChanged($event)">
         <option *ngFor="let item of contentList">{{item}}</option>
       </select>
       

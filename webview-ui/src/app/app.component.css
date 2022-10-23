@@ -6,11 +6,10 @@ main {
   align-items: flex-start;
   height: 100%;
   margin: 0;
-  line-height: 1.7;
 }
 
 main > * {
-  margin: 1rem 0;
+  margin: 2px;
 }
 
 div {
@@ -26,7 +25,7 @@ button {
   font-size: var(--vscode-font-size);
   font-weight: var(--vscode-font-weight);
   padding: 10px;
-  margin: 15px;
+  margin: 5px;
 }
 
 button:hover {

@@ -3,9 +3,10 @@ import { BrowserModule } from "@angular/platform-browser";
 
 import { AppComponent } from "./app.component";
 import { VarViewerComponent } from "./components/varViewer.component";
+import { SvdViewerComponent } from "./components/svdViewer.component";
 
 @NgModule({
-  declarations: [AppComponent, VarViewerComponent],
+  declarations: [AppComponent, VarViewerComponent, SvdViewerComponent],
   imports: [BrowserModule],
   providers: [],
   bootstrap: [AppComponent],

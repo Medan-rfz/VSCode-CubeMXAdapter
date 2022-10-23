@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { getUri } from "../utilities/getUri";
 import * as path from 'path';
 import {MakefileReader} from '../app/MakefileReader';
+import * as svdDownloader from '../app/svdDownloader'
 
 export class HelloWorldPanel {
   public static currentPanel: HelloWorldPanel | undefined;
@@ -9,6 +10,7 @@ export class HelloWorldPanel {
   private _disposables: vscode.Disposable[] = [];
   private makefileReader : MakefileReader;
   private workspacePath : string = '';
+  private svdFilesList : string[] = [];
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
@@ -22,6 +24,11 @@ export class HelloWorldPanel {
     }
 
     this.makefileReader = new MakefileReader(this.workspacePath + "/Makefile");
+
+    svdDownloader.getListOfSvdFiles().then(svdList => {
+      this.svdFilesList = svdList;
+      this.sendMsgAddPaths("svdFiles_UpdateList", this.svdFilesList);
+    });
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -126,13 +133,19 @@ export class HelloWorldPanel {
             this.makefileReader.deleteValuesInVariable(this.makefileReader.cIncludeMakeVar, text.split(','));
             this.sendAllVariablesToUi();
             return;
+
+          case "svdFiles_clickLoadButton":
+            svdDownloader.downloadSvdFile(this.workspacePath, text);
+
+          case "svdFiles_getList":
+            this.sendMsgAddPaths("svdFiles_UpdateList", this.svdFilesList);
         }
       },
       undefined,
       this._disposables
     );
   }
-
+ 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private openCSourceDialog() {
     const opt : vscode.OpenDialogOptions = {
