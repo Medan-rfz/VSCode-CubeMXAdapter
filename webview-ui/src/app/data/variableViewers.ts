@@ -33,6 +33,6 @@ export const variableViewers: IVaribleViewer[] = [
     isButtonAdd: true,
     isButtonEdit: false,
     isButtonDelete: true,
-    prefixCmd: "definesList",
+    prefixCmd: "defines",
   },
 ];

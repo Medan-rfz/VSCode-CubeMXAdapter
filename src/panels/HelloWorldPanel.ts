@@ -100,7 +100,7 @@ export class HelloWorldPanel {
             this.openHeaderDialog();
             return;
 
-          case "definesList_clickAddButton":
+          case "defines_clickAddButton":
             //            this.openHeaderDialog();
             return;
 
@@ -132,7 +132,7 @@ export class HelloWorldPanel {
             this.sendAllVariablesToUi();
             return;
 
-          case "definesList_clickDeleteButton":
+          case "defines_clickDeleteButton":
             this.makefileReader.deleteValuesInVariable(
               this.makefileReader.cDefineMakeVar,
               text.split(",")
@@ -220,13 +220,13 @@ export class HelloWorldPanel {
     });
   }
 
-  // private openHeaderDialog() {       ADD definesDialog !!!!!!!!
+  // private openDefinesDialog() {
   //   const opt: vscode.OpenDialogOptions = {
   //     filters: {},
   //     canSelectMany: true,
   //     canSelectFiles: false,
   //     canSelectFolders: true,
-  //     title: "Add header folder",
+  //     title: "Add defines folder",
   //   };
 
   //   vscode.window.showOpenDialog(opt).then((value) => {
@@ -260,10 +260,10 @@ export class HelloWorldPanel {
     this.sendCmd("cSrcFiles_allClear");
     this.sendCmd("cppSrcFiles_allClear");
     this.sendCmd("incFiles_allClear");
-    this.sendCmd("definesList_allClear");
+    this.sendCmd("defines_allClear");
     this.sendMsgAddPaths("cSrcFiles_addNewLines", this.makefileReader.getCSourcePaths());
     this.sendMsgAddPaths("cppSrcFiles_addNewLines", this.makefileReader.getCppSourcePaths());
     this.sendMsgAddPaths("incFiles_addNewLines", this.makefileReader.getIncludePaths());
-    this.sendMsgAddPaths("definesList_addNewLines", this.makefileReader.getDefinesPath());
+    this.sendMsgAddPaths("defines_addNewLines", this.makefileReader.getDefinesPath());
   }
 }
