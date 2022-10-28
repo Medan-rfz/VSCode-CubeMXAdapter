@@ -39,7 +39,7 @@ export class MakefileReader {
     public getDefinesPath(): string[] {
         let list: string[] = this.getVariableList(this.cDefineMakeVar);
         list.forEach((value, index, list) => {
-            list[index] = value.replace("-D", "");
+            list[index] = value.replace(/^-D/g, '');
         });
         return list;
     }
