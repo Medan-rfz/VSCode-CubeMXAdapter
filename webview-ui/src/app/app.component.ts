@@ -48,7 +48,6 @@ export class AppComponent {
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-<<<<<<< HEAD
   public clickAdaptVSC() {
     this.sendCommand("adaptPrjForVSC");
   }
@@ -60,9 +59,6 @@ export class AppComponent {
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public sendCommand(command : string) {
-=======
-  public sendCommand(command: string) {
->>>>>>> 2899577b64beb0d95574242d03b68f404aa64aa4
     vscode.postMessage({
       command: command,
       text: "",
