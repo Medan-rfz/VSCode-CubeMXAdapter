@@ -1,4 +1,4 @@
-import {TextFile} from './TextFile';
+import { TextFile } from "./TextFile";
 
 export class MakefileReader {
     public asmSourceMakeVar : string = "ASM_SOURCES";
@@ -32,6 +32,14 @@ export class MakefileReader {
         let list : string[] = this.getVariableList(this.cIncludeMakeVar);
         list.forEach((value, index, list) => {
             list[index] = value.replace(/^-I/g, '');
+        });
+        return list;
+    }
+
+    public getDefinesPath(): string[] {
+        let list: string[] = this.getVariableList(this.cDefineMakeVar);
+        list.forEach((value, index, list) => {
+            list[index] = value.replace("-D", "");
         });
         return list;
     }
@@ -81,8 +89,8 @@ export class MakefileReader {
             if(index < (array.length - 1)) { file.addLine(lineIndex++, value + ' \\'); }
             else { file.addLine(lineIndex++, value); }
         });
-
         file.saveFile();
+        return;
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
