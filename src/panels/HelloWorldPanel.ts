@@ -2,13 +2,15 @@ import * as vscode from "vscode";
 import { getUri } from "../utilities/getUri";
 import * as path from 'path';
 import {MakefileReader} from '../app/MakefileReader';
-import * as svdDownloader from '../app/svdDownloader'
+import * as svdDownloader from '../app/SvdDownloader'
+import {cCppPropertiesReader} from '../app/CCppPropertiesJson'
 
 export class HelloWorldPanel {
   public static currentPanel: HelloWorldPanel | undefined;
   private readonly _panel: vscode.WebviewPanel;
   private _disposables: vscode.Disposable[] = [];
   private makefileReader : MakefileReader;
+  private cCppPropReader : cCppPropertiesReader;
   private workspacePath : string = '';
   private svdFilesList : string[] = [];
 
@@ -24,11 +26,15 @@ export class HelloWorldPanel {
     }
 
     this.makefileReader = new MakefileReader(this.workspacePath + "/Makefile");
+    this.cCppPropReader = new cCppPropertiesReader(this.workspacePath + "/.vscode/c_cpp_properties.json", this.makefileReader);
 
     svdDownloader.getListOfSvdFiles().then(svdList => {
       this.svdFilesList = svdList;
       this.sendMsgAddPaths("svdFiles_UpdateList", this.svdFilesList);
     });
+
+    this.cCppPropReader.InitNewConfiguration();
+    //cCppPropFile.ReadCCppPropFile(this.workspacePath + "/.vscode/c_cpp_properties.json");
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -111,12 +117,12 @@ export class HelloWorldPanel {
             this.openCppSourceDialog();
             return;
 
-          case "incFiles_clickAddButton":
+          case "incFolders_clickAddButton":
             this.openHeaderDialog();
             return;
 
           case "defines_clickAddButton":
-            //            this.openHeaderDialog();
+            // this.openHeaderDialog();
             return;
 
           case "getAllMakefileInformation":
@@ -139,7 +145,7 @@ export class HelloWorldPanel {
             this.sendAllVariablesToUi();
             return;
 
-          case "incFiles_clickDeleteButton":
+          case "incFolders_clickDeleteButton":
             this.makefileReader.deleteValuesInVariable(
               this.makefileReader.cIncludeMakeVar,
               text.split(",")
@@ -246,8 +252,9 @@ export class HelloWorldPanel {
         existList = existList.map((value) => value.replace(/-I/g, ''));
         list = this.exeptCompareItems(existList, list);
         if(list.length !== 0) {
-          this.sendMsgAddPaths("incFiles_addNewLines", list);
+          this.sendMsgAddPaths("incFolders_addNewLines", list);
           this.makefileReader.addValuesInVariableWithPrefix(this.makefileReader.cIncludeMakeVar, "-I", list);
+          // TODO Add into c/cpp prop
         }
       }
     });
@@ -285,11 +292,11 @@ export class HelloWorldPanel {
   private sendAllVariablesToUi() {
     this.sendCmd("cSrcFiles_allClear");
     this.sendCmd("cppSrcFiles_allClear");
-    this.sendCmd("incFiles_allClear");
+    this.sendCmd("incFolders_allClear");
     this.sendCmd("defines_allClear");
     this.sendMsgAddPaths("cSrcFiles_addNewLines", this.makefileReader.getCSourcePaths());
     this.sendMsgAddPaths("cppSrcFiles_addNewLines", this.makefileReader.getCppSourcePaths());
-    this.sendMsgAddPaths("incFiles_addNewLines", this.makefileReader.getIncludePaths());
+    this.sendMsgAddPaths("incFolders_addNewLines", this.makefileReader.getIncludePaths());
     this.sendMsgAddPaths("defines_addNewLines", this.makefileReader.getDefinesPath());
   }
 

@@ -25,7 +25,7 @@ export const variableViewers: IVaribleViewer[] = [
     isButtonAdd: true,
     isButtonEdit: false,
     isButtonDelete: true,
-    prefixCmd: "incFiles",
+    prefixCmd: "incFolders",
   },
   {
     title: "Defines",
