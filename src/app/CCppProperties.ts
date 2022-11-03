@@ -16,9 +16,10 @@ interface cCppProp {
 export class cCppPropertiesReader {
     public filePath : string = '';
     private _makefileReader : MakefileReader;
+    private _configName : string = "CubeMXAdapter";
 
     private configurationTemplate : cCppProp = {
-        name : "CubeMXAdapter",
+        name : this._configName,
         includePath : [],
         defines : [],
         cStandard : "c17",
@@ -48,7 +49,7 @@ export class cCppPropertiesReader {
             let readedJsonObj = JSON.parse(readedData);
 
             /* Check exist configuration */
-            if(!this.isConfigurationByName("CubeMXAdapterNew", readedJsonObj.configurations)) {
+            if(!this.isConfigurationByName(readedJsonObj.configurations)) {
                 readedJsonObj.configurations.push(this.configurationTemplate);
                 toWriteData = JSON.stringify(readedJsonObj, null, 2)
                 fs.writeFileSync(this.filePath, toWriteData, "utf-8");
@@ -56,25 +57,42 @@ export class cCppPropertiesReader {
 
             /* Update configuration according to Makefile */
             this.updateConfigFromMakefile();
-
         }
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public updateConfigFromMakefile() {
-        // TODO
+        if(fs.existsSync(this.filePath)) {
+            let includes = this._makefileReader.getIncludePaths();
+            let defines = this._makefileReader.getDefines();
+            let readedJsonObj = JSON.parse(fs.readFileSync(this.filePath, "utf-8"));
+
+            const indConfig = this.getConfigIndex(readedJsonObj.configurations);
+            readedJsonObj.configurations[indConfig].includePath = includes;
+            readedJsonObj.configurations[indConfig].defines = defines;
+
+            let toWriteData = JSON.stringify(readedJsonObj, null, 2)
+            fs.writeFileSync(this.filePath, toWriteData, "utf-8");
+        }
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    private isConfigurationByName(name : string, configurations : any[]) : boolean {
+    private isConfigurationByName(configurations : any[]) : boolean {
         for(let config of configurations) {
-            if(config.name === name) { return true; }
+            if(config.name === this._configName) { return true; }
         }
         return false;
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    
+    private getConfigIndex(configurations : any[]) : number {
+        let index = 0;
+        for(let config of configurations) {
+            if(config.name === this._configName) { return index; }
+            index++;
+        }
+        return -1;
+    }
 }
 
 

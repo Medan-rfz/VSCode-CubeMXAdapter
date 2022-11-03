@@ -36,7 +36,7 @@ export class MakefileReader {
         return list;
     }
 
-    public getDefinesPath(): string[] {
+    public getDefines(): string[] {
         let list: string[] = this.getVariableList(this.cDefineMakeVar);
         list.forEach((value, index, list) => {
             list[index] = value.replace(/^-D/g, '');

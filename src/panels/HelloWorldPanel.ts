@@ -3,7 +3,7 @@ import { getUri } from "../utilities/getUri";
 import * as path from 'path';
 import {MakefileReader} from '../app/MakefileReader';
 import * as svdDownloader from '../app/SvdDownloader'
-import {cCppPropertiesReader} from '../app/CCppPropertiesJson'
+import {cCppPropertiesReader} from '../app/CCppProperties'
 
 export class HelloWorldPanel {
   public static currentPanel: HelloWorldPanel | undefined;
@@ -32,9 +32,6 @@ export class HelloWorldPanel {
       this.svdFilesList = svdList;
       this.sendMsgAddPaths("svdFiles_UpdateList", this.svdFilesList);
     });
-
-    this.cCppPropReader.InitNewConfiguration();
-    //cCppPropFile.ReadCCppPropFile(this.workspacePath + "/.vscode/c_cpp_properties.json");
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -264,6 +261,7 @@ export class HelloWorldPanel {
   private adaptForVSC() {
     this.makefileReader.activateSilentMode();
     this.makefileReader.activateEchoForCompilation();
+    this.cCppPropReader.InitNewConfiguration();
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -297,7 +295,7 @@ export class HelloWorldPanel {
     this.sendMsgAddPaths("cSrcFiles_addNewLines", this.makefileReader.getCSourcePaths());
     this.sendMsgAddPaths("cppSrcFiles_addNewLines", this.makefileReader.getCppSourcePaths());
     this.sendMsgAddPaths("incFolders_addNewLines", this.makefileReader.getIncludePaths());
-    this.sendMsgAddPaths("defines_addNewLines", this.makefileReader.getDefinesPath());
+    this.sendMsgAddPaths("defines_addNewLines", this.makefileReader.getDefines());
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
