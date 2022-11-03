@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import * as fs from 'fs';
 import {MakefileReader} from './MakefileReader';
+import * as path from 'path';
 
 
 interface cCppProp {
@@ -24,7 +25,8 @@ export class cCppPropertiesReader {
         defines : [],
         cStandard : "c17",
         cppStandard : "c++17",
-        intelliSenseMode : "gcc-arm"    
+        intelliSenseMode : "gcc-arm",
+        compilerPath : "E:/Tools/arm-none-eabi-gcc/10 2020-q4-major/bin/arm-none-eabi-gcc.exe", // XXX
     };
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -40,9 +42,15 @@ export class cCppPropertiesReader {
 
         /* Check exist c_cpp_properties.json file */
         if(!fs.existsSync(this.filePath)) {
+            /* Create of the directory ".vscode" if not exsist it */
+            if(!fs.existsSync(path.dirname(this.filePath))) {
+                fs.mkdirSync(path.dirname(this.filePath));
+            }
+
             /* Create new c_cpp_prop file */
             toWriteData = JSON.stringify({configurations : [ this.configurationTemplate ], version : 4}, null, 2)
             fs.writeFileSync(this.filePath, toWriteData, "utf-8");
+            this.updateConfigFromMakefile();
         }
         else {
             readedData = fs.readFileSync(this.filePath, "utf-8");
@@ -54,8 +62,6 @@ export class cCppPropertiesReader {
                 toWriteData = JSON.stringify(readedJsonObj, null, 2)
                 fs.writeFileSync(this.filePath, toWriteData, "utf-8");
             }
-
-            /* Update configuration according to Makefile */
             this.updateConfigFromMakefile();
         }
     }
