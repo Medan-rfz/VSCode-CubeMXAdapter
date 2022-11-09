@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
-import { IVaribleViewer } from "../models/variableViewer";
-import { vscode } from "../utilities/vscode";
+import { IVaribleViewer } from "../../models/variableViewer";
+import { vscode } from "../../utilities/vscode";
 
 @Component ({
     selector: "var-viewer",

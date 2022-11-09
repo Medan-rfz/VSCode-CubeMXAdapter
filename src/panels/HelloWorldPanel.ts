@@ -4,6 +4,7 @@ import * as path from 'path';
 import {MakefileReader} from '../app/MakefileReader';
 import * as svdDownloader from '../app/SvdDownloader'
 import {cCppPropertiesReader} from '../app/CCppProperties'
+import {DebugLaunchReader} from '../app/DebugLaunchReader'
 
 export class HelloWorldPanel {
   public static currentPanel: HelloWorldPanel | undefined;
@@ -11,6 +12,7 @@ export class HelloWorldPanel {
   private _disposables: vscode.Disposable[] = [];
   private makefileReader : MakefileReader;
   private cCppPropReader : cCppPropertiesReader;
+  private debugLaunchReader : DebugLaunchReader;
   private workspacePath : string = '';
   private svdFilesList : string[] = [];
 
@@ -27,6 +29,7 @@ export class HelloWorldPanel {
 
     this.makefileReader = new MakefileReader(this.workspacePath + "/Makefile");
     this.cCppPropReader = new cCppPropertiesReader(this.workspacePath + "/.vscode/c_cpp_properties.json", this.makefileReader);
+    this.debugLaunchReader = new DebugLaunchReader(this.workspacePath + "/.vscode/launch.json", this.makefileReader)
 
     svdDownloader.getListOfSvdFiles().then(svdList => {
       this.svdFilesList = svdList;
@@ -262,6 +265,7 @@ export class HelloWorldPanel {
     this.makefileReader.activateSilentMode();
     this.makefileReader.activateEchoForCompilation();
     this.cCppPropReader.InitNewConfiguration();
+    this.debugLaunchReader.InitNewConfiguration();
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//

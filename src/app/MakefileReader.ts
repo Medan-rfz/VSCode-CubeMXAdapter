@@ -63,6 +63,15 @@ export class MakefileReader {
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public getVariableSingle(varName : string) : string {
+        let file = new TextFile(this.makefilePath);
+        let lineIndex = this.getInxFirstLineOfVariable(file, varName);
+        if(lineIndex === -1) { return ""; }
+        let line = file.getLine(lineIndex-1).replace(/ |\r|\n/g, '');
+        return line.substring((line.search("=")+1));
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public addValuesInVariable(varName : string, values : string[]) {
         let file = new TextFile(this.makefilePath);
         let lineIndex = this.getInxLastLineOfVariable(file, varName);

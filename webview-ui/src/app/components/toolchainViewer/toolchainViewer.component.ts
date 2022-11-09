@@ -1,20 +1,20 @@
 import { Component, Input } from "@angular/core";
-import { vscode } from "../utilities/vscode";
+import { vscode } from "../../utilities/vscode";
 
 @Component ({
-    selector: "svd-viewer",
-    templateUrl: "./svdViewer.component.html",
-    styleUrls: ["./svdViewer.component.css"],
+    selector: "toolchain-viewer",
+    templateUrl: "./toolchainViewer.component.html",
+    styleUrls: ["./toolchainViewer.component.css"],
 })
-export class SvdViewerComponent {
-    title = "SVD file"
-    description = "Choose from the list the appropriate .svd file for your project and click Load to upload it";
+export class ToolchainViewerComponent {
+    title = "Toolchain"
+    description = "...";
     contentList : string[] = [];
     selectedOption : string;
 
-    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -=-=-=-=-=-=-=-=-=-=//
     constructor() {
-        this.sendCommand("svdFiles_getList");
+        //this.sendCommand("svdFiles_getList");
         this._createListenerCommands();
     }
 
@@ -24,7 +24,7 @@ export class SvdViewerComponent {
             const message = event.data;
 
             switch (message.command) {
-                case "svdFiles_UpdateList":
+                case "toolChain_UpdateList":
                     this.contentList = message.text.split(',');
                     break;
             }
@@ -38,15 +38,15 @@ export class SvdViewerComponent {
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    public clickLoadButton() {
-        this.sendCommandText("svdFiles_clickLoadButton", this.selectedOption);
+    public clickBrowserButton() {
+        //this.sendCommandText("svdFiles_clickLoadButton", this.selectedOption);
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     private sendCommand(command : string) {
         vscode.postMessage({
-        command: command,
-        text: "",
+            command: command,
+            text: "",
         });
     }
 
