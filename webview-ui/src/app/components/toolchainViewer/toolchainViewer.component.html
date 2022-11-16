@@ -3,10 +3,12 @@
     <label> {{description}} </label>
 
     <div class="container-horizontal-stack">
-        <select (change)="selectChanged($event)">
-            <option *ngFor="let item of contentList">{{item}}</option>
-        </select>
+        <label title={{compilerPath}}>Compiler path: {{compilerPath}}</label>
+        <button (click)="clickChangeCompilerButton()">Change</button>
+    </div>
 
-        <button (click)="clickBrowserButton()">Browser...</button>
+    <div class="container-horizontal-stack">
+        <label title={{openocdPath}}>Openocd path: {{openocdPath}}</label>
+        <button (click)="clickChangeOpenocdButton()">Change</button>
     </div>
 </div>

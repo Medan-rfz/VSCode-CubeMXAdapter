@@ -9,8 +9,9 @@ import { vscode } from "../../utilities/vscode";
 export class ToolchainViewerComponent {
     title = "Toolchain"
     description = "...";
-    contentList : string[] = [];
     selectedOption : string;
+    compilerPath: "";
+    openocdPath: "";
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -=-=-=-=-=-=-=-=-=-=//
     constructor() {
@@ -24,8 +25,18 @@ export class ToolchainViewerComponent {
             const message = event.data;
 
             switch (message.command) {
-                case "toolChain_UpdateList":
-                    this.contentList = message.text.split(',');
+                case "toolChain_UpdatePaths":
+                    let paths = JSON.parse(message.text);
+                    this.compilerPath = paths.compilerPath;
+                    this.openocdPath = paths.openocdPath;
+                    break;
+                
+                case "toolChain_UpdateCompilerPath":
+                    this.compilerPath = message.text;
+                    break;
+
+                case "toolChain_UpdateOpenocdPath":
+                    this.openocdPath = message.text;
                     break;
             }
         });
@@ -38,8 +49,13 @@ export class ToolchainViewerComponent {
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    public clickBrowserButton() {
-        //this.sendCommandText("svdFiles_clickLoadButton", this.selectedOption);
+    public clickChangeCompilerButton() {
+        this.sendCommand("toolChain_clickChangeCompilerPath");
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public clickChangeOpenocdButton() {
+        this.sendCommand("toolChain_clickChangeOpenocdPath");
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//

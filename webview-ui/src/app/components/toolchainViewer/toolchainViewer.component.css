@@ -1,11 +1,25 @@
 
+
 div {
     padding: 2px;
 }
 
 label {
     margin: 2px;
+    font-style: italic;
+    align-self: center;
+    width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
+/* label:hover {
+    background-color: var(--vscode-input-background);
+    border-color: var(--vscode-focusBorder);
+    overflow: visible; 
+    z-index: 2;
+} */
 
 button {
     color: var(--vscode-button-foreground);
@@ -15,30 +29,21 @@ button {
     font-style: var(--vscode-font-family);
     font-size: var(--vscode-font-size);
     font-weight: var(--vscode-font-weight);
-    padding: 10px;
+
     align-self: center;
     margin: 15px;
 
-    display: flex;
-    min-width: 100px;
+    min-width: 75px;
+    min-height: 30px;
     text-align: center;
+    align-content: center;
 }
 
 button:hover {
     background-color: var(--vscode-button-hoverBackground);
 }
 
-select {
-    color: var(--vscode-input-foreground);
-    background-color: var(--vscode-input-background);
-    border-color: var(--vscode-focusBorder);
-    border-width: 1px;
 
-    width: 15vw;
-    height: 30px;
-
-    align-self: center;
-}
 
 .main-container {
     padding: 20px;

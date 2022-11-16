@@ -2,9 +2,10 @@ import * as vscode from "vscode";
 import { getUri } from "../../utilities/getUri";
 import * as path from 'path';
 import {MakefileReader} from '../../app/MakefileReader';
-import * as svdDownloader from '../../app/SvdDownloader'
-import {cCppPropertiesReader} from '../../app/CCppProperties'
-import {DebugLaunchReader} from '../../app/DebugLaunchReader'
+import * as svdDownloader from '../../app/SvdDownloader';
+import {cCppPropertiesReader} from '../../app/CCppProperties';
+import {DebugLaunchReader} from '../../app/DebugLaunchReader';
+import {MainConfigJson} from '../../app/MainConfigJson';
 
 export class CubeMxAdapterPanel {
   public static currentPanel: CubeMxAdapterPanel | undefined;
@@ -13,6 +14,7 @@ export class CubeMxAdapterPanel {
   private makefileReader : MakefileReader;
   private cCppPropReader : cCppPropertiesReader;
   private debugLaunchReader : DebugLaunchReader;
+  private mainConfigJson : MainConfigJson;
   private workspacePath : string = '';
   private svdFilesList : string[] = [];
 
@@ -30,6 +32,7 @@ export class CubeMxAdapterPanel {
     this.makefileReader = new MakefileReader(this.workspacePath + "/Makefile");
     this.cCppPropReader = new cCppPropertiesReader(this.workspacePath + "/.vscode/c_cpp_properties.json", this.makefileReader);
     this.debugLaunchReader = new DebugLaunchReader(this.workspacePath + "/.vscode/launch.json", this.makefileReader)
+    this.mainConfigJson = new MainConfigJson();
 
     svdDownloader.getListOfSvdFiles().then(svdList => {
       this.svdFilesList = svdList;
@@ -109,6 +112,14 @@ export class CubeMxAdapterPanel {
             this.adaptForCpp();
             return;
 
+          case "toolChain_clickChangeCompilerPath":
+            this.openToolchainPathDialog("toolChain_UpdateCompilerPath", "Compiler path");
+            return;
+
+          case "toolChain_clickChangeOpenocdPath":
+            this.openToolchainPathDialog("toolChain_UpdateOpenocdPath", "Openocd path");
+            return;
+
           case "cSrcFiles_clickAddButton":
             this.openCSourceDialog();
             return;
@@ -172,7 +183,32 @@ export class CubeMxAdapterPanel {
       this._disposables
     );
   }
- 
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  private openToolchainPathDialog(cmd: string, title: string) {
+    const opt: vscode.OpenDialogOptions = {
+      filters: {},
+      canSelectMany: false,
+      canSelectFiles: false,
+      canSelectFolders: true,
+      title: title,
+    };
+
+    vscode.window.showOpenDialog(opt).then((value) => {
+      if(value !== undefined) {
+        let newPath = value[0].fsPath.replace(/\\/g, '/');
+        this.sendMsg(cmd, newPath);
+
+        if(title === "Compiler path") {
+          this.mainConfigJson.setCompilerPath(newPath);
+        }
+        else if (title === "Openocd path") {
+          this.mainConfigJson.setOpenocdPath(newPath);
+        }
+      }
+    });
+  }
+
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private openCSourceDialog() {
     const opt: vscode.OpenDialogOptions = {
@@ -284,6 +320,11 @@ export class CubeMxAdapterPanel {
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  private sendMsg(cmd: string, msg: string) {
+    this._panel.webview.postMessage({command: cmd, text: msg});
+  }
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private sendMsgAddPaths(cmd : string, paths : string[]) {
     if(paths.length !== 0) {
       this._panel.webview.postMessage({command: cmd, text: paths.toString()});
@@ -300,6 +341,9 @@ export class CubeMxAdapterPanel {
     this.sendMsgAddPaths("cppSrcFiles_addNewLines", this.makefileReader.getCppSourcePaths());
     this.sendMsgAddPaths("incFolders_addNewLines", this.makefileReader.getIncludePaths());
     this.sendMsgAddPaths("defines_addNewLines", this.makefileReader.getDefines());
+
+    this.sendMsg("toolChain_UpdatePaths", 
+      JSON.stringify({ compilerPath: this.mainConfigJson.getCompilerPath(), openocdPath: this.mainConfigJson.getOpenocdPath()}));
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
