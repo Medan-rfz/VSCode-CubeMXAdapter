@@ -10,14 +10,14 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:CubeMXadapter.showHelloWorld"
+    "onCommand:CubeMXadapter.showCubeMxAdapter"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "CubeMXadapter.showHelloWorld",
-        "title": "CubeMXadapter"
+        "command": "CubeMXadapter.showCubeMxAdapter",
+        "title": "CubeMX adapter: Home"
       }
     ]
   },

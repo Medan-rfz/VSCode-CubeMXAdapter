@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
-import { getUri } from "../utilities/getUri";
+import { getUri } from "../../utilities/getUri";
 import * as path from 'path';
-import {MakefileReader} from '../app/MakefileReader';
-import * as svdDownloader from '../app/SvdDownloader'
-import {cCppPropertiesReader} from '../app/CCppProperties'
-import {DebugLaunchReader} from '../app/DebugLaunchReader'
+import {MakefileReader} from '../../app/MakefileReader';
+import * as svdDownloader from '../../app/SvdDownloader'
+import {cCppPropertiesReader} from '../../app/CCppProperties'
+import {DebugLaunchReader} from '../../app/DebugLaunchReader'
 
-export class HelloWorldPanel {
-  public static currentPanel: HelloWorldPanel | undefined;
+export class CubeMxAdapterPanel {
+  public static currentPanel: CubeMxAdapterPanel | undefined;
   private readonly _panel: vscode.WebviewPanel;
   private _disposables: vscode.Disposable[] = [];
   private makefileReader : MakefileReader;
@@ -39,8 +39,8 @@ export class HelloWorldPanel {
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public static render(extensionUri: vscode.Uri) {
-    if (HelloWorldPanel.currentPanel) {
-      HelloWorldPanel.currentPanel._panel.reveal(vscode.ViewColumn.One);
+    if (CubeMxAdapterPanel.currentPanel) {
+      CubeMxAdapterPanel.currentPanel._panel.reveal(vscode.ViewColumn.One);
     } else {
       const panel = vscode.window.createWebviewPanel(
         "showCubeMXadapter",
@@ -51,13 +51,13 @@ export class HelloWorldPanel {
         }
       );
 
-      HelloWorldPanel.currentPanel = new HelloWorldPanel(panel, extensionUri);
+      CubeMxAdapterPanel.currentPanel = new CubeMxAdapterPanel(panel, extensionUri);
     }
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public dispose() {
-    HelloWorldPanel.currentPanel = undefined;
+    CubeMxAdapterPanel.currentPanel = undefined;
     this._panel.dispose();
     while (this._disposables.length) {
       const disposable = this._disposables.pop();
@@ -81,7 +81,7 @@ export class HelloWorldPanel {
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <link rel="stylesheet" type="text/css" href="${stylesUri}">
-          <title>Hello World</title>
+          <title>CubeMX adapter</title>
         </head>
         <body>
           <app-root></app-root>
