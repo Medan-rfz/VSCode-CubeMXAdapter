@@ -30,10 +30,10 @@ export class CubeMxAdapterPanel {
       this.workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
     }
 
+    CubeMxAdapterPanel.mainConfigJson = new MainConfigJson();
     CubeMxAdapterPanel.makefileReader = new MakefileReader(this.workspacePath + "/Makefile");
     CubeMxAdapterPanel.cCppPropReader = new cCppPropertiesReader(this.workspacePath + "/.vscode/c_cpp_properties.json", CubeMxAdapterPanel.makefileReader);
     CubeMxAdapterPanel.debugLaunchReader = new DebugLaunchReader(this.workspacePath + "/.vscode/launch.json", CubeMxAdapterPanel.makefileReader)
-    CubeMxAdapterPanel.mainConfigJson = new MainConfigJson();
 
     svdDownloader.getListOfSvdFiles().then(svdList => {
       this.svdFilesList = svdList;

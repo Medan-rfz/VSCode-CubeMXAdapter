@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as fs from 'fs';
 import {MakefileReader} from './MakefileReader';
 import * as path from 'path';
+import { CubeMxAdapterPanel } from "./../panels/MainPanel/CubeMxAdapterPanel";
 
 
 interface cCppProp {
@@ -26,7 +27,7 @@ export class cCppPropertiesReader {
         cStandard : "c17",
         cppStandard : "c++17",
         intelliSenseMode : "gcc-arm",
-        compilerPath : "E:/Tools/arm-none-eabi-gcc/10 2020-q4-major/bin/arm-none-eabi-gcc.exe", // XXX
+        compilerPath : CubeMxAdapterPanel.mainConfigJson.getCompilerPath() + "/arm-none-eabi-gcc.exe",
     };
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -100,6 +101,4 @@ export class cCppPropertiesReader {
         return -1;
     }
 }
-
-
 
