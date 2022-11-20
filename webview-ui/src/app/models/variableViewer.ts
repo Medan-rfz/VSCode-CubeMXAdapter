@@ -5,4 +5,5 @@ export interface IVaribleViewer {
     isButtonEdit : boolean
     isButtonDelete : boolean
     prefixCmd : string
+    tabActive : boolean
 }

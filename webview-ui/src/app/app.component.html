@@ -9,18 +9,21 @@
     </div>
   </div>
 
-  <div *ngFor = "let variable of varViewer">
-    <hr>
+
+  <tab-panel [variablesInfo]="varViewer">
+
+  </tab-panel>
+
+
+  <!-- <div *ngFor = "let variable of varViewer">
     <var-viewer  [variableInfo]="variable"></var-viewer>
-  </div>
+  </div> -->
 
   <div>
-    <hr>
     <svd-viewer></svd-viewer>
   </div>
 
   <div>
-    <hr>
     <toolchain-viewer></toolchain-viewer>
   </div>
 

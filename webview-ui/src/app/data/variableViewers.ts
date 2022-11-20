@@ -8,6 +8,7 @@ export const variableViewers: IVaribleViewer[] = [
     isButtonEdit: false,
     isButtonDelete: true,
     prefixCmd: "cSrcFiles",
+    tabActive: true,
   },
   {
     title: "C++ sources",
@@ -16,6 +17,7 @@ export const variableViewers: IVaribleViewer[] = [
     isButtonEdit: false,
     isButtonDelete: true,
     prefixCmd: "cppSrcFiles",
+    tabActive: false,
   },
   {
     title: "Headers",
@@ -24,6 +26,7 @@ export const variableViewers: IVaribleViewer[] = [
     isButtonEdit: false,
     isButtonDelete: true,
     prefixCmd: "incFolders",
+    tabActive: false,
   },
   {
     title: "Defines",
@@ -32,5 +35,6 @@ export const variableViewers: IVaribleViewer[] = [
     isButtonEdit: false,
     isButtonDelete: true,
     prefixCmd: "defines",
+    tabActive: false,
   },
 ];

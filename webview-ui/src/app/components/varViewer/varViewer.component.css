@@ -54,9 +54,9 @@ select {
 
 .main-container {
   /* border: 1px solid var(--vscode-input-foreground); */
-  padding: 20px;
+  padding: 2px;
 
-  width: 95vw;
+  width: fit-content;
   max-width: 95vw;
   max-height: 90vh;
 }
