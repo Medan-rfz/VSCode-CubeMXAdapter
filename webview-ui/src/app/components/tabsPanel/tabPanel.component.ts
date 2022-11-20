@@ -6,7 +6,7 @@ import { vscode } from "../../utilities/vscode";
 @Component ({
     selector: "tab-panel",
     templateUrl: "./tabPanel.component.html",
-    styleUrls: ["./tabPanel.component.css"],
+    styleUrls: ["./../../styles/mainStyles.css", "./tabPanel.component.css"],
 })
 export class TabPanelComponent {
     @Input() variablesInfo : IVaribleViewer[];

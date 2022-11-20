@@ -1,45 +1,10 @@
 
-main {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  height: 100%;
+
+hr {
   margin: 0;
 }
 
-main > * {
-  margin: 2px;
-}
 
-div {
-  padding: 2px;
-}
 
-button {
-  color: var(--vscode-button-foreground);
-  background-color: var(--vscode-button-background);
-  border-color: var(--vscode-button-border);
-  border-width: 0px;
-  font-style: var(--vscode-font-family);
-  font-size: var(--vscode-font-size);
-  font-weight: var(--vscode-font-weight);
-  padding: 10px;
-  margin: 5px;
-}
-
-button:hover {
-  background-color: var(--vscode-button-hoverBackground);
-}
-
-.container-vertical-stack {
-  display: flex;
-  flex-direction: column;
-}
-
-.container-horizontal-stack {
-  display: flex;
-  flex-direction: row;
-}
 
 

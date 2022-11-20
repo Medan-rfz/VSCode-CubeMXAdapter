@@ -4,7 +4,7 @@ import { vscode } from "../../utilities/vscode";
 @Component ({
     selector: "toolchain-viewer",
     templateUrl: "./toolchainViewer.component.html",
-    styleUrls: ["./toolchainViewer.component.css"],
+    styleUrls: ["./../../styles/mainStyles.css", "./toolchainViewer.component.css"],
 })
 export class ToolchainViewerComponent {
     title = "Toolchain"

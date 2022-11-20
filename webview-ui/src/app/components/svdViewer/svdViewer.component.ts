@@ -4,7 +4,7 @@ import { vscode } from "../../utilities/vscode";
 @Component ({
     selector: "svd-viewer",
     templateUrl: "./svdViewer.component.html",
-    styleUrls: ["./svdViewer.component.css"],
+    styleUrls: ["./../../styles/mainStyles.css", "./svdViewer.component.css"],
 })
 export class SvdViewerComponent {
     title = "SVD file"

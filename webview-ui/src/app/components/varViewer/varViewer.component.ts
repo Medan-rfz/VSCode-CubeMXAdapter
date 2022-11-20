@@ -5,7 +5,7 @@ import { vscode } from "../../utilities/vscode";
 @Component ({
     selector: "var-viewer",
     templateUrl: "./varViewer.component.html",
-    styleUrls: ["./varViewer.component.css"],
+    styleUrls: ["./../../styles/mainStyles.css", "./varViewer.component.css"],
 })
 export class VarViewerComponent {
   @Input() variableInfo : IVaribleViewer;

@@ -6,7 +6,7 @@ import { vscode } from "./utilities/vscode";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.css"],
+  styleUrls: ["./styles/mainStyles.css", "./app.component.css"],
 })
 export class AppComponent {
   title = "CubeMX adapter";

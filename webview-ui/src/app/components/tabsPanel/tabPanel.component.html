@@ -5,7 +5,7 @@
         (click)="activateTab(variable)" [class.active]="variable.tabActive">{{variable.title}}</button>
     </div>
 
-    <div class="tab-content-container" *ngFor = "let variable of variablesInfo" [style.visibility]="variable.tabActive ? 'visible' : 'hidden'">
+    <div class="tab-content-container" *ngFor = "let variable of variablesInfo" [style.display]="variable.tabActive ? 'flex' : 'none'">
         <var-viewer [variableInfo]="variable"></var-viewer>
     </div>
 </div>

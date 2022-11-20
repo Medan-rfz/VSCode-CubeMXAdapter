@@ -1,5 +1,4 @@
-<main>
-
+<div class="container-vertical-stack">
   <h1>{{title}}</h1>
 
   <div>
@@ -9,22 +8,18 @@
     </div>
   </div>
 
+  <hr>
+  <div>
+    <tab-panel [variablesInfo]="varViewer"></tab-panel>
+  </div>
 
-  <tab-panel [variablesInfo]="varViewer">
-
-  </tab-panel>
-
-
-  <!-- <div *ngFor = "let variable of varViewer">
-    <var-viewer  [variableInfo]="variable"></var-viewer>
-  </div> -->
-
+  <hr>
   <div>
     <svd-viewer></svd-viewer>
   </div>
 
+  <hr>
   <div>
     <toolchain-viewer></toolchain-viewer>
   </div>
-
-</main>
+</div>

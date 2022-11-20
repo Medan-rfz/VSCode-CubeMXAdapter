@@ -1,9 +1,5 @@
 
 
-div {
-    padding: 2px;
-}
-
 label {
     margin: 2px;
     font-style: italic;
@@ -14,51 +10,14 @@ label {
     text-overflow: ellipsis;
 }
 
-/* label:hover {
-    background-color: var(--vscode-input-background);
-    border-color: var(--vscode-focusBorder);
-    overflow: visible; 
-    z-index: 2;
-} */
-
-button {
-    color: var(--vscode-button-foreground);
-    background-color: var(--vscode-button-background);
-    border-color: var(--vscode-button-border);
-    border-width: 0px;
-    font-style: var(--vscode-font-family);
-    font-size: var(--vscode-font-size);
-    font-weight: var(--vscode-font-weight);
-
-    align-self: center;
-    margin: 15px;
-
-    min-width: 75px;
-    min-height: 30px;
-    text-align: center;
-    align-content: center;
-}
 
 button:hover {
     background-color: var(--vscode-button-hoverBackground);
 }
 
-
-
 .main-container {
-    padding: 20px;
-    width: 95vw;
+    padding: 2px;
     max-width: 95vw;
     max-height: 90vh;
-}
-
-.container-vertical-stack {
-    display: flex;
-    flex-direction: column;
-}
-
-.container-horizontal-stack {
-    display: flex;
-    flex-direction: row;
 }
 

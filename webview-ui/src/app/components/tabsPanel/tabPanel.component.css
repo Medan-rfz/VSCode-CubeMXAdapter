@@ -1,33 +1,14 @@
-div {
-    margin: 2px;
-}
 
 var-viewer {
     display: flex;
-    margin: auto;
     width: fit-content;
-}
-
-button {
-    color: var(--vscode-button-foreground);
-    background-color: var(--vscode-button-background);
-    border-color: var(--vscode-button-border);
-    border-width: 0px;
-    font-style: var(--vscode-font-family);
-    font-size: var(--vscode-font-size);
-    font-weight: var(--vscode-font-weight);
-    padding: 10px;
-    margin: 0px;
-}
-
-button:hover {
-    background-color: var(--vscode-button-hoverBackground);
 }
 
 .tab {
     text-transform: uppercase;
     background-color: #00000000;
     padding: 10px 20px;
+    margin: 0;
 }
 
 .tab:hover {
@@ -46,23 +27,11 @@ button:hover {
 .main-container {
     padding: 2px;
     width: fit-content;
-    max-width: 95vw;
-    max-height: 90vh;
-}
-
-.container-vertical-stack {
-    display: flex;
-    flex-direction: column;
-}
-
-.container-horizontal-stack {
-    display: flex;
-    flex-direction: row;
+    height: fit-content;
 }
 
 .tab-content-container {
     margin: 0px;
-    position: fixed;
     background-color: var(--vscode-tab-inactiveBackground);
     width: fit-content;
     padding: 10px;
