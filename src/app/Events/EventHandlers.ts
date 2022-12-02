@@ -4,7 +4,6 @@ import {CubeMxAdapterPanel} from "../../panels/MainPanel/CubeMxAdapterPanel";
 import {MessageSender} from "../../app/MessageSender";
 import * as svdDownloader from "../../app/SvdDownloader";
 
-
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 export function adaptToVSC(text: string) {
     CubeMxAdapterPanel.makefileReader.activateSilentMode();
@@ -26,38 +25,28 @@ export function adaptToCpp(text: string) {
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 export function toolchainChangeCompilerPath(text: string) {
-    const opt: vscode.OpenDialogOptions = {
-        filters: {},
-        canSelectMany: false,
-        canSelectFiles: false,
-        canSelectFolders: true,
-        title: "Compiler path",
-    };
+    const opt: vscode.OpenDialogOptions = {	filters: {}, canSelectMany: false, canSelectFiles: false,
+        canSelectFolders: true, title: "Compiler path" };
 
     vscode.window.showOpenDialog(opt).then((value) => {
         if(value !== undefined) {
-        let newPath = value[0].fsPath.replace(/\\/g, '/');
-        MessageSender.sendMsg("toolChain_UpdateCompilerPath", newPath);
-        CubeMxAdapterPanel.mainConfigJson.setCompilerPath(newPath);
+			let newPath = value[0].fsPath.replace(/\\/g, '/');
+			MessageSender.sendMsg("toolChain_UpdateCompilerPath", newPath);
+			CubeMxAdapterPanel.mainConfigJson.setCompilerPath(newPath);
         }
     });
 }
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 export function toolchainChangeOpenocdPath(text: string) {
-    const opt: vscode.OpenDialogOptions = {
-        filters: {},
-        canSelectMany: false,
-        canSelectFiles: false,
-        canSelectFolders: true,
-        title: "Openocd path",
-    };
+    const opt: vscode.OpenDialogOptions = {	filters: {}, canSelectMany: false, canSelectFiles: false,
+        canSelectFolders: true, title: "Openocd path"};
 
     vscode.window.showOpenDialog(opt).then((value) => {
         if(value !== undefined) {
-        let newPath = value[0].fsPath.replace(/\\/g, '/');
-        MessageSender.sendMsg("toolChain_UpdateOpenocdPath", newPath);
-        CubeMxAdapterPanel.mainConfigJson.setCompilerPath(newPath);
+			let newPath = value[0].fsPath.replace(/\\/g, '/');
+			MessageSender.sendMsg("toolChain_UpdateOpenocdPath", newPath);
+			CubeMxAdapterPanel.mainConfigJson.setCompilerPath(newPath);
         }
     });
 }
@@ -104,8 +93,8 @@ export function addCppSourceFiles(text: string) {
 				let existList = _makefileReader.getVariableList(_makefileReader.cppSourceMakeVar);
 				list = exeptCompareItems(existList, list);
 				if(list.length !== 0) {
-				MessageSender.sendMsgAddPaths("cppSrcFiles_addNewLines", list);
-				_makefileReader.addValuesInVariable(_makefileReader.cppSourceMakeVar, list);
+					MessageSender.sendMsgAddPaths("cppSrcFiles_addNewLines", list);
+					_makefileReader.addValuesInVariable(_makefileReader.cppSourceMakeVar, list);
 				}
 			}        
 		}
@@ -116,14 +105,13 @@ export function addCppSourceFiles(text: string) {
 export function addHeaderFolders(text: string) {
 	let _makefileReader = CubeMxAdapterPanel.makefileReader;
 	const opt: vscode.OpenDialogOptions = {	filters: {}, canSelectMany: true, canSelectFiles: false,
-											canSelectFolders: true, title: "Add header folder"};
+		canSelectFolders: true, title: "Add header folder"};
 
 	vscode.window.showOpenDialog(opt).then((value) => {
 		if(value !== undefined) {
 			let list : string[] = [];
 			for(let i = 0; i < value.length; i++) {
 				let newRelativePath = path.relative(CubeMxAdapterPanel.workspacePath, value[i].fsPath).replace(/\\/g, '/');
-
 				list.push(newRelativePath);
 			}
 
@@ -154,57 +142,45 @@ export function addDefine(text: string) {
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 export function deleteCSourceFile(text: string) {
-	CubeMxAdapterPanel.makefileReader.deleteValuesInVariable(
-		CubeMxAdapterPanel.makefileReader.cSourceMakeVar,
-		text.split(",")
-		);
+	CubeMxAdapterPanel.makefileReader.deleteValuesInVariable(CubeMxAdapterPanel.makefileReader.cSourceMakeVar, text.split(","));
 	sendAllVariablesToUi(text);
 }
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 export function deleteCppSourceFile(text: string) {
-	CubeMxAdapterPanel.makefileReader.deleteValuesInVariable(
-		CubeMxAdapterPanel.makefileReader.cppSourceMakeVar,
-		text.split(",")
-		);
+	CubeMxAdapterPanel.makefileReader.deleteValuesInVariable(CubeMxAdapterPanel.makefileReader.cppSourceMakeVar, text.split(","));
 	sendAllVariablesToUi(text);
 }
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 export function deleteHeaderFolders(text: string) {
-	CubeMxAdapterPanel.makefileReader.deleteValuesInVariable(
-		CubeMxAdapterPanel.makefileReader.cIncludeMakeVar,
-		text.split(",")
-		);
+	CubeMxAdapterPanel.makefileReader.deleteValuesInVariable(CubeMxAdapterPanel.makefileReader.cIncludeMakeVar, text.split(","));
 	sendAllVariablesToUi(text);
 	CubeMxAdapterPanel.cCppPropReader.updateConfigFromMakefile();
 }
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 export function deleteDefines(text: string) {
-	CubeMxAdapterPanel.makefileReader.deleteValuesInVariable(
-		CubeMxAdapterPanel.makefileReader.cDefineMakeVar,
-		text.split(",")
-		);
+	CubeMxAdapterPanel.makefileReader.deleteValuesInVariable(CubeMxAdapterPanel.makefileReader.cDefineMakeVar, text.split(","));
 	sendAllVariablesToUi(text);
 	CubeMxAdapterPanel.cCppPropReader.updateConfigFromMakefile();
 }
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 export function sendAllVariablesToUi(text: string) {
-let _makefileReader = CubeMxAdapterPanel.makefileReader;
-MessageSender.sendCmd("cSrcFiles_allClear");
-MessageSender.sendCmd("cppSrcFiles_allClear");
-MessageSender.sendCmd("incFolders_allClear");
-MessageSender.sendCmd("defines_allClear");
-MessageSender.sendMsgAddPaths("cSrcFiles_addNewLines", _makefileReader.getCSourcePaths());
-MessageSender.sendMsgAddPaths("cppSrcFiles_addNewLines", _makefileReader.getCppSourcePaths());
-MessageSender.sendMsgAddPaths("incFolders_addNewLines", _makefileReader.getIncludePaths());
-MessageSender.sendMsgAddPaths("defines_addNewLines", _makefileReader.getDefines());
+	let _makefileReader = CubeMxAdapterPanel.makefileReader;
+	MessageSender.sendCmd("cSrcFiles_allClear");
+	MessageSender.sendCmd("cppSrcFiles_allClear");
+	MessageSender.sendCmd("incFolders_allClear");
+	MessageSender.sendCmd("defines_allClear");
+	MessageSender.sendMsgAddPaths("cSrcFiles_addNewLines", _makefileReader.getCSourcePaths());
+	MessageSender.sendMsgAddPaths("cppSrcFiles_addNewLines", _makefileReader.getCppSourcePaths());
+	MessageSender.sendMsgAddPaths("incFolders_addNewLines", _makefileReader.getIncludePaths());
+	MessageSender.sendMsgAddPaths("defines_addNewLines", _makefileReader.getDefines());
 
-MessageSender.sendMsg("toolChain_UpdatePaths", 
-			JSON.stringify({compilerPath: CubeMxAdapterPanel.mainConfigJson.getCompilerPath(), 
-							openocdPath: CubeMxAdapterPanel.mainConfigJson.getOpenocdPath()}));
+	MessageSender.sendMsg("toolChain_UpdatePaths",
+		JSON.stringify({compilerPath: CubeMxAdapterPanel.mainConfigJson.getCompilerPath(), 
+		openocdPath: CubeMxAdapterPanel.mainConfigJson.getOpenocdPath()}));
 }
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
