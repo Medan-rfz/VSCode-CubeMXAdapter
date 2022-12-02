@@ -1,14 +1,15 @@
 
 var-viewer {
     display: flex;
-    width: fit-content;
 }
 
 .tab {
+    display: flex;
     text-transform: uppercase;
     background-color: #00000000;
     padding: 10px 20px;
     margin: 0;
+    overflow: hidden;
 }
 
 .tab:hover {
@@ -21,19 +22,20 @@ var-viewer {
     font-weight: bold;
     background-color: #00000000;
     border-bottom: 2px solid var(--vscode-button-foreground);
-    /* background-color: var(--vscode-tab-inactiveBackground); */
 }
 
 .main-container {
     padding: 2px;
-    width: fit-content;
-    height: fit-content;
 }
 
 .tab-content-container {
     margin: 0px;
     background-color: var(--vscode-tab-inactiveBackground);
-    width: fit-content;
     padding: 10px;
+    width: fit-content
+}
+
+.container-horizontal-stack {
+    overflow: hidden;
 }
 

@@ -8,7 +8,7 @@ interface mainConfig {
 
 export class MainConfigJson {
 
-    private filePath : string = __dirname + "/../Config.json";
+    private filePath : string = __dirname + "./../../Config.json";
 
     private configEntity : mainConfig = {
         compilerPath : "",

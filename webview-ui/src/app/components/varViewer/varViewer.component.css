@@ -1,13 +1,10 @@
 
-textarea {
-  color: var(--vscode-input-foreground);
-  background-color: var(--vscode-input-background);
-  border-color: var(--vscode-focusBorder);
-  border-width: 1px;
+label {
+  display: flex;
   white-space: nowrap;
-
-  min-width: 500px;
-  min-height: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 50vw;
 }
 
 select {
@@ -17,17 +14,18 @@ select {
   border-width: 1px;
   overflow-x: scroll;
 
-  width: 35vw;
-  min-width: 30vw;
-  min-height: 150px;
-  max-height: 600px;
+  width: 40vw;
+  min-width: 20vw;
+  max-width: 40vw;
+  min-height: 20vh;
+  max-height: 40vh;
 
   resize: both;
 }
 
 .button-file-manipulation {
   display: flex;
-  min-width: 100px;
+  width: 100px;
   text-align: center;
   margin: 5px 10px 2px 15px;
 }
@@ -35,19 +33,13 @@ select {
 .main-container {
   /* border: 1px solid var(--vscode-input-foreground); */
   padding: 2px;
-
-  width: fit-content;
-  max-width: 95vw;
-  max-height: 90vh;
-}
-
-.container-vertical-stack {
-  display: flex;
-  flex-direction: column;
+  width: 100%;
 }
 
 .container-horizontal-stack {
-  display: flex;
-  flex-direction: row;
+  overflow: hidden;
 }
 
+.container-vertical-stack {
+  overflow: hidden;
+}

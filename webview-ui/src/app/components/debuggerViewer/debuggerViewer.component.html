@@ -1,0 +1,12 @@
+<div class="main-container">
+    <h3>{{title}}</h3>
+    <label> {{description}} </label>
+
+    <div class="container-horizontal-stack">
+        <select (change)="selectChanged($event)" [selectedIndex]="getSelectedIndex()">
+            <option *ngFor="let item of contentList" [selected]="item === selectedOption">{{item}}</option>
+        </select>
+
+        <button (click)="clickApplyButton()">Apply</button>
+    </div>
+</div>

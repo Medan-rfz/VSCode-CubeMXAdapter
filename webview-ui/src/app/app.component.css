@@ -1,10 +1,23 @@
 
-
 hr {
   margin: 0;
 }
 
+tab-panel {
+  display: flex;
+  overflow: auto;
+  margin: 0;  
+}
 
+toolchain-viewer {
+  display: flex;
+  overflow: auto;
+  margin: 0 20px;
+}
+
+.container-horizontal-stack {
+  width: 100%;
+}
 
 
 

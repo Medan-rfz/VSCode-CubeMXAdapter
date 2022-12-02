@@ -6,10 +6,11 @@ import { VarViewerComponent } from "./components/varViewer/varViewer.component";
 import { SvdViewerComponent } from "./components/svdViewer/svdViewer.component";
 import { ToolchainViewerComponent } from "./components/toolchainViewer/toolchainViewer.component";
 import { TabPanelComponent } from "./components/tabsPanel/tabPanel.component";
+import { DebuggerViewerComponent } from "./components/debuggerViewer/debuggerViewer.component";
 
 @NgModule({
   declarations: [AppComponent, VarViewerComponent, SvdViewerComponent, ToolchainViewerComponent,
-                TabPanelComponent],
+                TabPanelComponent, DebuggerViewerComponent],
   imports: [BrowserModule],
   providers: [],
   bootstrap: [AppComponent],

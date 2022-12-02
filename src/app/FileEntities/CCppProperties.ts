@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as fs from 'fs';
 import {MakefileReader} from './MakefileReader';
 import * as path from 'path';
-import { CubeMxAdapterPanel } from "./../panels/MainPanel/CubeMxAdapterPanel";
+import { CubeMxAdapterPanel } from "../../panels/MainPanel/CubeMxAdapterPanel";
 
 
 interface cCppProp {

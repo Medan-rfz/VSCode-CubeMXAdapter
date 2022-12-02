@@ -1,23 +1,21 @@
 
 
 label {
+    display: flex;
     margin: 2px;
+    width: 60%;
     font-style: italic;
-    align-self: center;
-    width: 300px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-
-button:hover {
-    background-color: var(--vscode-button-hoverBackground);
+.container-vertical-stack {
+    overflow: hidden;
 }
 
-.main-container {
-    padding: 2px;
-    max-width: 95vw;
-    max-height: 90vh;
+.container-horizontal-stack {
+    vertical-align: middle;
 }
+
 

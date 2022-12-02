@@ -13,13 +13,12 @@ button {
     font-weight: var(--vscode-font-weight);
     padding: 10px;
     margin: 5px;
+    border-radius: 2px;
 }
 
 button:hover {
     background-color: var(--vscode-button-hoverBackground);
 }
-
-
 
 
 .container-vertical-stack {

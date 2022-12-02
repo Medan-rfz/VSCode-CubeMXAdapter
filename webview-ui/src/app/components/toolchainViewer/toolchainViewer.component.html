@@ -1,14 +1,15 @@
-<div class="main-container">
+
+<div class="container-vertical-stack">
     <h3>{{title}}</h3>
     <label> {{description}} </label>
 
     <div class="container-horizontal-stack">
-        <label title={{compilerPath}}>Compiler path: {{compilerPath}}</label>
+        <label title={{compilerPath}}><b>Compiler path:</b>&emsp;{{compilerPath}}</label>
         <button (click)="clickChangeCompilerButton()">Change</button>
     </div>
 
     <div class="container-horizontal-stack">
-        <label title={{openocdPath}}>Openocd path: {{openocdPath}}</label>
+        <label title={{openocdPath}}><b>Openocd path:</b>&emsp;{{openocdPath}}</label>
         <button (click)="clickChangeOpenocdButton()">Change</button>
     </div>
 </div>

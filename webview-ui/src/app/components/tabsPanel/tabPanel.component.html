@@ -1,8 +1,8 @@
 
 <div class="main-container">
     <div class="container-horizontal-stack">
-        <button class="tab" *ngFor = "let variable of variablesInfo" 
-        (click)="activateTab(variable)" [class.active]="variable.tabActive">{{variable.title}}</button>
+        <button class="tab" *ngFor = "let variable of variablesInfo"
+            (click)="activateTab(variable)" [class.active]="variable.tabActive">{{variable.title}}</button>
     </div>
 
     <div class="tab-content-container" *ngFor = "let variable of variablesInfo" [style.display]="variable.tabActive ? 'flex' : 'none'">
