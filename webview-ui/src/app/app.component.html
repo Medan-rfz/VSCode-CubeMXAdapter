@@ -5,17 +5,20 @@
     <div class="container-horizontal-stack">
       <button (click)="clickAdaptVSC()">Adapt for VSCode</button>
       <button (click)="clickAdaptCpp()">Adapt for C++</button>
+
+      <button class = "svdButton" [disabled]="svdListIsLoad ? true : null" (click)="clickLoadSVDButton()">
+        <div class = "container-horizontal-stack" *ngIf="svdListIsLoad"> 
+          <label>Loading... </label>
+          <div class="loader"></div>
+        </div>
+        <div *ngIf="!svdListIsLoad">Load SVD</div>
+      </button>
     </div>
   </div>
 
   <hr>
   <div>
     <tab-panel [variablesInfo]="varViewer"></tab-panel>
-  </div>
-
-  <hr>
-  <div >
-    <svd-viewer></svd-viewer>
   </div>
 
   <hr>

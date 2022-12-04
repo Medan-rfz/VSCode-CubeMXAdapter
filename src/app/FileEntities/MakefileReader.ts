@@ -10,6 +10,8 @@ export class MakefileReader {
     public cDefineMakeVar : string = "C_DEFS";
     public debugMakeVar : string = "DEBUG";
     public optimizationMakeVar : string = "OPT";
+    public debuggerMakeVar:string = "DEBUGGER";
+    public deviceNameMakeVar: string = "DEVICE";
 
     public makefilePath : string = '';
 
@@ -69,6 +71,15 @@ export class MakefileReader {
         if(lineIndex === -1) { return ""; }
         let line = file.getLine(lineIndex-1).replace(/ |\r|\n/g, '');
         return line.substring((line.search("=")+1));
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public writeValueInVariable(varName : string, value : string) {
+        let file = new TextFile(this.makefilePath);
+        let lineIndex = this.getInxLastLineOfVariable(file, varName);
+
+        file.setLine(lineIndex, file.getLine(lineIndex).replace(/\r|\n/g, '').replace(/=.*/g, '= ') + value);
+        file.saveFile();
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -212,6 +223,23 @@ export class MakefileReader {
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public addDebuggerAndDeviceInfo() {
+        let file = new TextFile(this.makefilePath);
+        let indexAllMark = file.findLine(/^DEBUGGER\s*=/g, 1);
+        if(indexAllMark === -1) {
+            indexAllMark = file.findLine(/^TARGET\s*=/g, 1);
+            file.addLine(indexAllMark+1, "DEBUGGER =");
+            file.saveFile();
+        }
+        indexAllMark = file.findLine(/^DEVICE\s*=/g, 1);
+        if(indexAllMark === -1) {
+            indexAllMark = file.findLine(/^TARGET\s*=/g, 1);
+            file.addLine(indexAllMark+1, "DEVICE =");
+            file.saveFile();
+        }
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public addCppCompilerVar() {
         let file = new TextFile(this.makefilePath);
         let index = file.findLine(/^CC\s*=/g, 1);
@@ -282,6 +310,31 @@ export class MakefileReader {
                 file.saveFile();
             }
         }
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public getDeviceName() : string {
+        let file = new TextFile(this.makefilePath);
+        let index = file.findLine(/^-DSTM32/g, 1);
+        if(index !== -1) {
+            let tmp: string = file.getLine(index).replace(/ |\r|\n|-D/g, '');
+            return tmp;
+        }
+        return "";
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public getDeviceNameOpenocdCfg() : string {
+        let name : string = this.getDeviceName();
+        let res = name.match(/^STM32\D{1,2}\d/g);
+        if(res !== null) {return res[0].toLowerCase() + ".cfg";}
+        else {return ""}
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public getDebuggerNameCfg() : string {
+        let debuggerName : string = this.getVariableSingle(this.debuggerMakeVar);
+        return debuggerName + ".cfg";
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//

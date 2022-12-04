@@ -11,6 +11,7 @@ export class VarViewerComponent {
   @Input() variableInfo : IVaribleViewer;
   contentList : string[] = [];
   selectedOption : string[]  = [];
+  testName: string = "test";
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   constructor() {
@@ -35,6 +36,11 @@ export class VarViewerComponent {
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  public testClick(event : any) {
+    
+  }
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public selectChanged(event : any) {
     let list : string[] = [];
     const values = event.target.selectedOptions;
@@ -43,6 +49,11 @@ export class VarViewerComponent {
       list.push(values[i].value);
     }
     this.selectedOption = list;
+  }
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  public dbClickSelected(event : any) {
+    const values = event.target.selectedOptions[0];
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//

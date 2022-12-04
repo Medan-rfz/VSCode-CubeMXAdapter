@@ -3,7 +3,7 @@
     <label> {{description}} </label>
 
     <div class="container-horizontal-stack">
-        <select (change)="selectChanged($event)" [selectedIndex]="getSelectedIndex()">
+        <select (change)="selectChanged($event)">
             <option *ngFor="let item of contentList" [selected]="item === selectedOption">{{item}}</option>
         </select>
 

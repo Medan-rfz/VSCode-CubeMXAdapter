@@ -14,7 +14,7 @@ export class DebuggerViewerComponent {
         "jlink",
         "cmsis-dap"
     ];
-    selectedOption : string = "";
+    selectedOption : string = this.contentList[0];
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     constructor() {
@@ -37,20 +37,13 @@ export class DebuggerViewerComponent {
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    public getSelectedIndex() : number {
-
-
-        return 2;
-    }
-
-    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public selectChanged(event : any) {
         this.selectedOption = event.target.selectedOptions[0].value;
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public clickApplyButton() {
-        this.sendCommandText("debugger_writeDebugger", this.selectedOption);
+        this.sendCommandText("debugger_selectedUpdate", this.selectedOption);
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//

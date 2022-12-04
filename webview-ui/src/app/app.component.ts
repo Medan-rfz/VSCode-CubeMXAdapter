@@ -15,6 +15,7 @@ export class AppComponent {
   headerFolders: string[] = [];
   definesList: string[] = [];
   varViewer: IVaribleViewer[] = variableViewers;
+  svdListIsLoad: boolean = false;
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   constructor() {
@@ -43,6 +44,14 @@ export class AppComponent {
         case "addNewDefinesLine":
           this.definesList.push(message.text);
           break;
+
+        case "svdFile_beginListLoad":
+          this.svdListIsLoad = true;
+          break;
+
+        case "svdFile_endListLoad":
+          this.svdListIsLoad = false;
+          break;
       }
     });
   }
@@ -55,6 +64,11 @@ export class AppComponent {
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public clickAdaptCpp() {
     this.sendCommand("adaptPrjForCpp");
+  }
+
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  public clickLoadSVDButton() {
+    this.sendCommand("svdFiles_clickLoadButton");
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//

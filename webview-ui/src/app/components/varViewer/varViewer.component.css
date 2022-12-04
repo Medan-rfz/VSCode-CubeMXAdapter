@@ -4,7 +4,7 @@ label {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 50vw;
+  width: fit-content;
 }
 
 select {
@@ -14,11 +14,12 @@ select {
   border-width: 1px;
   overflow-x: scroll;
 
-  width: 40vw;
-  min-width: 20vw;
-  max-width: 40vw;
-  min-height: 20vh;
-  max-height: 40vh;
+  width: 600px;
+  height: 200px;
+  min-width: 200px;
+  max-width: 800px;
+  min-height: 100px;
+  max-height: 800px;
 
   resize: both;
 }
@@ -33,7 +34,8 @@ select {
 .main-container {
   /* border: 1px solid var(--vscode-input-foreground); */
   padding: 2px;
-  width: 100%;
+  width: fit-content;
+  height: fit-content;
 }
 
 .container-horizontal-stack {
@@ -42,4 +44,8 @@ select {
 
 .container-vertical-stack {
   overflow: hidden;
+}
+
+.input-new-value {
+  width: 100%;
 }

@@ -19,5 +19,22 @@ toolchain-viewer {
   width: 100%;
 }
 
+.svdButton {
+  width: 100px;
+}
+
+.loader {
+  border: 2px solid var(--vscode-foreground);
+  border-top: 2px solid var(--vscode-button-hoverBackground);
+  border-radius: 50%;
+  width: 5px;
+  height: 5px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
 

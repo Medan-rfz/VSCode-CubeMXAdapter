@@ -32,7 +32,8 @@ var-viewer {
     margin: 0px;
     background-color: var(--vscode-tab-inactiveBackground);
     padding: 10px;
-    width: fit-content
+    width: fit-content;
+    height: fit-content;
 }
 
 .container-horizontal-stack {

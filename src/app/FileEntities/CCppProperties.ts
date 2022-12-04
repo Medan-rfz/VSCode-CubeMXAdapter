@@ -31,9 +31,9 @@ export class cCppPropertiesReader {
     };
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    constructor(pathFile : string, makefileReader : MakefileReader) {
+    constructor(pathFile : string) {
         this.filePath = pathFile;
-        this._makefileReader = makefileReader;
+        this._makefileReader = CubeMxAdapterPanel.makefileReader;
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//

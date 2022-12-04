@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as fs from 'fs';
 import {MakefileReader} from './MakefileReader';
 import * as path from 'path';
+import { CubeMxAdapterPanel } from "../../panels/MainPanel/CubeMxAdapterPanel";
 
 
 interface LaunchJson {
@@ -33,16 +34,16 @@ export class DebugLaunchReader {
         executable : this._executableFile,
         svdFile : this._svdFile,
         configFiles : [
-            "interface/stlink.cfg",
-            "target/stm32f1x.cfg"
+            "interface/xxx.cfg",
+            "target/xxx.cfg"
         ],
         preLaunchTask : "Load",
     };
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    constructor(pathFile : string, makefileReader : MakefileReader) {
+    constructor(pathFile : string) {
         this.filePath = pathFile;
-        this._makefileReader = makefileReader;
+        this._makefileReader = CubeMxAdapterPanel.makefileReader;
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -81,12 +82,16 @@ export class DebugLaunchReader {
         if(fs.existsSync(this.filePath)) {
             let projetName = this._makefileReader.getVariableSingle("TARGET");
             let duildDir = this._makefileReader.getVariableSingle("BUILD_DIR");
+            let selectedDebugger = this._makefileReader.getVariableSingle("DEBUGGER");
             
             let readedJsonObj = JSON.parse(fs.readFileSync(this.filePath, "utf-8"));
 
             const indConfig = this.getConfigIndex(readedJsonObj.configurations);
             readedJsonObj.configurations[indConfig].executable = "./" + duildDir + "/" + projetName + ".elf";
-            //readedJsonObj.configurations[indConfig].defines = defines;
+            readedJsonObj.configurations[indConfig].configFiles = [
+                "interface/" + CubeMxAdapterPanel.devInfo.debuggerCfg,
+                "target/" + CubeMxAdapterPanel.devInfo.OpenocdCfg,
+            ];
 
             let toWriteData = JSON.stringify(readedJsonObj, null, 2)
             fs.writeFileSync(this.filePath, toWriteData, "utf-8");

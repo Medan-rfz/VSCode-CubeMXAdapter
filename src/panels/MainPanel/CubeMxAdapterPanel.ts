@@ -7,6 +7,7 @@ import {MainConfigJson} from '../../app/FileEntities/MainConfigJson';
 import {EventListener} from '../../app/Events/EventListener';
 import {MessageSender} from "../../app/MessageSender";
 import * as eventHandlers from "../../app/Events/EventHandlers";
+import { IDeviceInfo } from "../../app/IDeviceInfo";
 
 export class CubeMxAdapterPanel {
   public static currentPanel: CubeMxAdapterPanel | undefined;
@@ -14,6 +15,13 @@ export class CubeMxAdapterPanel {
   private _disposables: vscode.Disposable[] = [];
   private eventListener : EventListener;
   public static workspacePath : string = '';
+  public static devInfo: IDeviceInfo = {
+    Name: "",
+    Debugger: "",
+    OpenocdCfg: "",
+    debuggerCfg: "",
+    svdFile: "",
+  };
 
   public static makefileReader : MakefileReader;
   public static cCppPropReader : cCppPropertiesReader;
@@ -27,18 +35,18 @@ export class CubeMxAdapterPanel {
     this._panel.webview.html = this._getWebviewContent(this._panel.webview, extensionUri);
 
     MessageSender.setWebview(this._panel.webview);
-  
+
     if (vscode.workspace.workspaceFolders !== undefined) {
       CubeMxAdapterPanel.workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
     }
-    
+
     this.eventListener = new EventListener(this._panel.webview);
     this._setWebviewMessageListener();
 
     CubeMxAdapterPanel.mainConfigJson = new MainConfigJson();
     CubeMxAdapterPanel.makefileReader = new MakefileReader(CubeMxAdapterPanel.workspacePath + "/Makefile");
-    CubeMxAdapterPanel.cCppPropReader = new cCppPropertiesReader(CubeMxAdapterPanel.workspacePath + "/.vscode/c_cpp_properties.json", CubeMxAdapterPanel.makefileReader);
-    CubeMxAdapterPanel.debugLaunchReader = new DebugLaunchReader(CubeMxAdapterPanel.workspacePath + "/.vscode/launch.json", CubeMxAdapterPanel.makefileReader);
+    CubeMxAdapterPanel.cCppPropReader = new cCppPropertiesReader(CubeMxAdapterPanel.workspacePath + "/.vscode/c_cpp_properties.json");
+    CubeMxAdapterPanel.debugLaunchReader = new DebugLaunchReader(CubeMxAdapterPanel.workspacePath + "/.vscode/launch.json");
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -112,9 +120,8 @@ export class CubeMxAdapterPanel {
     this.eventListener.addHandler("incFolders_clickDeleteButton", eventHandlers.deleteHeaderFolders);
     this.eventListener.addHandler("defines_clickDeleteButton", eventHandlers.deleteDefines);
     this.eventListener.addHandler("svdFiles_clickLoadButton", eventHandlers.loadSVDFile);
-    this.eventListener.addHandler("svdFiles_getList", eventHandlers.updateSVDList);
-    this.eventListener.addHandler("debugger_getSelected", eventHandlers.sendSelectedDebugger);
-    this.eventListener.addHandler("debugger_writeDebugger", eventHandlers.writeUpdatedDebugger);
+    this.eventListener.addHandler("debugger_selectedUpdate", eventHandlers.writeUpdatedDebugger);
+    //this.eventListener.addHandler("debugger_writeDebugger", eventHandlers.writeUpdatedDebugger);
     this.eventListener.addHandler("getAllMakefileInformation", eventHandlers.sendAllVariablesToUi);
     this.eventListener.setWebviewMsgListener();
   }

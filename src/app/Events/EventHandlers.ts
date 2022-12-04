@@ -6,8 +6,15 @@ import * as svdDownloader from "../../app/SvdDownloader";
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 export function adaptToVSC(text: string) {
-    CubeMxAdapterPanel.makefileReader.activateSilentMode();
+	CubeMxAdapterPanel.makefileReader.addDebuggerAndDeviceInfo();
+	CubeMxAdapterPanel.devInfo.Name = CubeMxAdapterPanel.makefileReader.getDeviceName();	
+	CubeMxAdapterPanel.devInfo.OpenocdCfg = CubeMxAdapterPanel.makefileReader.getDeviceNameOpenocdCfg();
+	CubeMxAdapterPanel.devInfo.debuggerCfg = CubeMxAdapterPanel.makefileReader.getDebuggerNameCfg();
+	CubeMxAdapterPanel.makefileReader.writeValueInVariable(CubeMxAdapterPanel.makefileReader.deviceNameMakeVar, CubeMxAdapterPanel.devInfo.Name);
+
+	CubeMxAdapterPanel.makefileReader.activateSilentMode();
     CubeMxAdapterPanel.makefileReader.activateEchoForCompilation();
+
     CubeMxAdapterPanel.cCppPropReader.InitNewConfiguration();
     CubeMxAdapterPanel.debugLaunchReader.InitNewConfiguration();
 }
@@ -185,24 +192,22 @@ export function sendAllVariablesToUi(text: string) {
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 export function loadSVDFile(text: string) {
-	svdDownloader.downloadSvdFile(CubeMxAdapterPanel.workspacePath, text);
-}
-
-//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-export function updateSVDList(text: string) {
+	MessageSender.sendCmd("svdFile_beginListLoad");
 	svdDownloader.getListOfSvdFiles().then(svdList => {
-		MessageSender.sendMsgAddPaths("svdFiles_UpdateList", svdList);
-	});
-}
-
-//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-export function sendSelectedDebugger(text: string) {
-	MessageSender.sendMsg("debugger_UpdateSelected", "cmsis-dap");	// TODO
+		MessageSender.sendCmd("svdFile_endListLoad");
+		vscode.window.showQuickPick(svdList).then((value) => {
+			if(value !== undefined) {
+				svdDownloader.downloadSvdFile(CubeMxAdapterPanel.workspacePath, value);
+			}
+		});
+	});	
 }
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 export function writeUpdatedDebugger(text: string) {
-	// TODO
+	CubeMxAdapterPanel.makefileReader.writeValueInVariable(CubeMxAdapterPanel.makefileReader.debuggerMakeVar, text);
+	CubeMxAdapterPanel.devInfo.debuggerCfg = text + ".cfg";
+	CubeMxAdapterPanel.debugLaunchReader.updateConfigFromMakefile();
 }
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
