@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { variableViewers } from "./data/variableViewers";
 import { IVaribleViewer } from "./models/variableViewer";
-import { vscode } from "./utilities/vscode";
+import { MessageSender } from "./utilities/messageSender";
 
 @Component({
   selector: "app-root",
@@ -20,7 +20,7 @@ export class AppComponent {
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   constructor() {
     this._createListenerCommands();
-    this.sendCommand("getAllMakefileInformation");
+    MessageSender.sendCommand("getAllMakefileInformation");
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -58,24 +58,16 @@ export class AppComponent {
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public clickAdaptVSC() {
-    this.sendCommand("adaptPrjForVSC");
+    MessageSender.sendCommand("adaptPrjForVSC");
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public clickAdaptCpp() {
-    this.sendCommand("adaptPrjForCpp");
+    MessageSender.sendCommand("adaptPrjForCpp");
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public clickLoadSVDButton() {
-    this.sendCommand("svdFiles_clickLoadButton");
-  }
-
-  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-  public sendCommand(command : string) {
-    vscode.postMessage({
-      command: command,
-      text: "",
-    });
+    MessageSender.sendCommand("svdFiles_clickLoadButton");
   }
 }

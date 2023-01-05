@@ -121,7 +121,6 @@ export class CubeMxAdapterPanel {
     this.eventListener.addHandler("defines_clickDeleteButton", eventHandlers.deleteDefines);
     this.eventListener.addHandler("svdFiles_clickLoadButton", eventHandlers.loadSVDFile);
     this.eventListener.addHandler("debugger_selectedUpdate", eventHandlers.writeUpdatedDebugger);
-    //this.eventListener.addHandler("debugger_writeDebugger", eventHandlers.writeUpdatedDebugger);
     this.eventListener.addHandler("getAllMakefileInformation", eventHandlers.sendAllVariablesToUi);
     this.eventListener.setWebviewMsgListener();
   }

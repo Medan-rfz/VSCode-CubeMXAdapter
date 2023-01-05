@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { IVaribleViewer } from "../../models/variableViewer";
-import { vscode } from "../../utilities/vscode";
+import { MessageSender } from "../../utilities/messageSender";
 
 @Component ({
     selector: "var-viewer",
@@ -58,33 +58,17 @@ export class VarViewerComponent {
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public clickAddButton() {
-    this.sendCommand(this.variableInfo.prefixCmd + "_clickAddButton");
+    MessageSender.sendCommand(this.variableInfo.prefixCmd + "_clickAddButton");
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public clickEditButton() {
-    this.sendCommand(this.variableInfo.prefixCmd + "_clickEditButton");
+    MessageSender.sendCommand(this.variableInfo.prefixCmd + "_clickEditButton");
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   public clickDeleteButton() {
-    this.sendCommandText(this.variableInfo.prefixCmd + "_clickDeleteButton", this.selectedOption.toString());
-  }
-
-  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-  private sendCommand(command : string) {
-    vscode.postMessage({
-      command: command,
-      text: "",
-    });
-  }
-
-  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-  private sendCommandText(command : string, msgText : string) {
-    vscode.postMessage({
-      command: command,
-      text: msgText,
-    });
+    MessageSender.sendCommandText(this.variableInfo.prefixCmd + "_clickDeleteButton", this.selectedOption.toString());
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//

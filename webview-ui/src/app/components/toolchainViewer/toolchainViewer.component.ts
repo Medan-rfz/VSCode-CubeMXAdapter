@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { vscode } from "../../utilities/vscode";
+import { MessageSender } from "../../utilities/messageSender";
 
 @Component ({
     selector: "toolchain-viewer",
@@ -15,7 +15,6 @@ export class ToolchainViewerComponent {
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -=-=-=-=-=-=-=-=-=-=//
     constructor() {
-        //this.sendCommand("svdFiles_getList");
         this._createListenerCommands();
     }
 
@@ -50,28 +49,12 @@ export class ToolchainViewerComponent {
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public clickChangeCompilerButton() {
-        this.sendCommand("toolChain_clickChangeCompilerPath");
+        MessageSender.sendCommand("toolChain_clickChangeCompilerPath");
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public clickChangeOpenocdButton() {
-        this.sendCommand("toolChain_clickChangeOpenocdPath");
-    }
-
-    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    private sendCommand(command : string) {
-        vscode.postMessage({
-            command: command,
-            text: "",
-        });
-    }
-
-    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    private sendCommandText(command : string, msgText : string) {
-        vscode.postMessage({
-        command: command,
-        text: msgText,
-        });
+        MessageSender.sendCommand("toolChain_clickChangeOpenocdPath");
     }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//

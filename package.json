@@ -2,7 +2,9 @@
   "name": "CubeMXadapter",
   "displayName": "CubeMX adapter",
   "description": "",
-  "version": "0.0.1",
+  "icon": "Icons/Icon.ico",
+  "publisher": "Medan",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.46.0"
   },

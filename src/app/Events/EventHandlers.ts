@@ -11,6 +11,9 @@ export function adaptToVSC(text: string) {
 	CubeMxAdapterPanel.devInfo.OpenocdCfg = CubeMxAdapterPanel.makefileReader.getDeviceNameOpenocdCfg();
 	CubeMxAdapterPanel.devInfo.debuggerCfg = CubeMxAdapterPanel.makefileReader.getDebuggerNameCfg();
 	CubeMxAdapterPanel.makefileReader.writeValueInVariable(CubeMxAdapterPanel.makefileReader.deviceNameMakeVar, CubeMxAdapterPanel.devInfo.Name);
+	CubeMxAdapterPanel.makefileReader.addLoadTask();
+
+	CubeMxAdapterPanel.makefileReader.addNewVariableAfter("DEBUGGER", "GCC_PATH", CubeMxAdapterPanel.mainConfigJson.getCompilerPath());
 
 	CubeMxAdapterPanel.makefileReader.activateSilentMode();
     CubeMxAdapterPanel.makefileReader.activateEchoForCompilation();
@@ -23,7 +26,7 @@ export function adaptToVSC(text: string) {
 export function adaptToCpp(text: string) {
     let _makefileReader = CubeMxAdapterPanel.makefileReader;
     _makefileReader.addCppCompilerVar();
-    _makefileReader.addNewVariableAfter(_makefileReader.cSourceMakeVar, _makefileReader.cppSourceMakeVar);
+    _makefileReader.addNewVariableAfter(_makefileReader.cSourceMakeVar, _makefileReader.cppSourceMakeVar, "");
     _makefileReader.addCppCompilerFlags();
     _makefileReader.addCppObjectsVar();
     _makefileReader.addCppCompileTask();

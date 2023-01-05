@@ -1,3 +1,4 @@
+import { CubeMxAdapterPanel } from "../../panels/MainPanel/CubeMxAdapterPanel";
 import { TextFile } from "./TextFile";
 
 export class MakefileReader {
@@ -181,12 +182,12 @@ export class MakefileReader {
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    public addNewVariableAfter(afterVar : string, newVar : string) {
+    public addNewVariableAfter(afterVar : string, newVar : string, value : string) {
         let file = new TextFile(this.makefilePath);
         let indexVar = this.getInxFirstLineOfVariable(file, newVar);
         if(indexVar === -1) {
             let lineIndex = this.getInxLastLineOfVariable(file, afterVar) + 1;
-            file.addLines(lineIndex, ["", "", newVar + " ="]);
+            file.addLines(lineIndex, ["", "", newVar + " = " + value]);
             file.saveFile();
         }
     }
@@ -219,6 +220,29 @@ export class MakefileReader {
                 file.addLine(index+1, "\t@echo $(AS): $<");
                 file.saveFile();
             }
+        }
+    }
+
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+    public addLoadTask() {
+        let file = new TextFile(this.makefilePath);
+        let indexAllMark = file.findLine(/^flashload:/g, 1);
+        if(indexAllMark === -1) {
+            indexAllMark = file.findLine(/^all:/g, 1);
+            file.addLines(indexAllMark + 1, [
+                "\nOPENOCD :=" + CubeMxAdapterPanel.mainConfigJson.getOpenocdPath(),
+                "HEXFILE = $(CURDIR)/$(BUILD_DIR)/$(TARGET).hex",
+                "flashload:",
+                "\t$(OPENOCD)/bin/openocd.exe \\",
+                "\t\t-f interface/${DEBUGGER}.cfg" + " \\",
+                "\t\t-f target/" + CubeMxAdapterPanel.devInfo.OpenocdCfg + " \\",
+                "\t\t-c init \\",
+                "\t\t-c \"reset init\" \\",
+                "\t\t-c halt \\",
+                "\t\t-c \"program ${HEXFILE} verify\" \\",
+                "\t\t-c reset \\",
+                "\t\t-c exit"]);
+            file.saveFile();
         }
     }
 
@@ -267,7 +291,7 @@ export class MakefileReader {
             if(check === -1) {
                 file.addLines(index+1, [
                     "",
-                    "CXXFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections",
+                    "CXXFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections -fno-exceptions -fno-rtti",
                     "ifeq ($(DEBUG), 1)",
                     "CXXFLAGS += -g -gdwarf-2",
                     "endif",
@@ -303,7 +327,7 @@ export class MakefileReader {
             if(file.findLine(/\$\(BUILD_DIR\)\/%.o: %.cpp/g, 1) === - 1) {
                 file.addLines(index, [
                     "$(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)",
-                    "\t$(CXX) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@",
+                    "\t$(CXX) -c $(CXXFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@",
                     "\t@echo $(CXX): $<",
                     ""
                 ]);
@@ -327,7 +351,7 @@ export class MakefileReader {
     public getDeviceNameOpenocdCfg() : string {
         let name : string = this.getDeviceName();
         let res = name.match(/^STM32\D{1,2}\d/g);
-        if(res !== null) {return res[0].toLowerCase() + ".cfg";}
+        if(res !== null) {return res[0].toLowerCase() + "x.cfg";}
         else {return ""}
     }
 

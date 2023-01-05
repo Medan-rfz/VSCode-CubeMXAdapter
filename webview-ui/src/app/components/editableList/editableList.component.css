@@ -1,0 +1,22 @@
+ul {
+    margin: 0px;
+}
+
+li {
+    font-size: 14px;
+    margin: 0px;
+    border: 0px solid transparent;
+    outline: 0px solid transparent;
+}
+
+li:focus {
+    background-color: var(--vscode-toolbar-hoverBackground);
+}
+
+
+.main-container {
+    background-color: var(--vscode-input-background);
+    border: 1px solid var(--vscode-input-foreground);
+    padding: 0px;
+}
+

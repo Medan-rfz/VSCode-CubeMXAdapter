@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { vscode } from "../../utilities/vscode";
+import { MessageSender } from "../../utilities/messageSender";
 
 @Component ({
     selector: "debugger-viewer",
@@ -19,7 +19,7 @@ export class DebuggerViewerComponent {
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     constructor() {
         this._createListenerCommands();
-        this.sendCommand("debugger_getSelected"); 
+        MessageSender.sendCommand("debugger_getSelected"); 
     }
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
@@ -43,23 +43,7 @@ export class DebuggerViewerComponent {
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
     public clickApplyButton() {
-        this.sendCommandText("debugger_selectedUpdate", this.selectedOption);
-    }
-
-    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    private sendCommand(command : string) {
-        vscode.postMessage({
-        command: command,
-        text: "",
-        });
-    }
-
-    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-    private sendCommandText(command : string, msgText : string) {
-        vscode.postMessage({
-        command: command,
-        text: msgText,
-        });
+        MessageSender.sendCommandText("debugger_selectedUpdate", this.selectedOption);
     }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
