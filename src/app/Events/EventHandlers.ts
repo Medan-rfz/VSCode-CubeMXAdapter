@@ -20,6 +20,7 @@ export function adaptToVSC(text: string) {
 
     CubeMxAdapterPanel.cCppPropReader.InitNewConfiguration();
     CubeMxAdapterPanel.debugLaunchReader.InitNewConfiguration();
+	CubeMxAdapterPanel.tasksReader.InitNewTasks();
 }
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//

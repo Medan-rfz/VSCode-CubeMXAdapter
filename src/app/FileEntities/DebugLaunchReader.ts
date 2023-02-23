@@ -1,4 +1,3 @@
-import * as vscode from "vscode";
 import * as fs from 'fs';
 import {MakefileReader} from './MakefileReader';
 import * as path from 'path';
@@ -37,7 +36,7 @@ export class DebugLaunchReader {
             "interface/xxx.cfg",
             "target/xxx.cfg"
         ],
-        preLaunchTask : "Load",
+        preLaunchTask : "Upload",
     };
 
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//

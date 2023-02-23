@@ -3,6 +3,7 @@ import { getUri } from "../../utilities/getUri";
 import {MakefileReader} from '../../app/FileEntities/MakefileReader';
 import {cCppPropertiesReader} from '../../app/FileEntities/CCppProperties';
 import {DebugLaunchReader} from '../../app/FileEntities/DebugLaunchReader';
+import {TasksReader} from '../../app/FileEntities/TasksReader';
 import {MainConfigJson} from '../../app/FileEntities/MainConfigJson';
 import {EventListener} from '../../app/Events/EventListener';
 import {MessageSender} from "../../app/MessageSender";
@@ -27,6 +28,7 @@ export class CubeMxAdapterPanel {
   public static cCppPropReader : cCppPropertiesReader;
   public static debugLaunchReader : DebugLaunchReader;
   public static mainConfigJson : MainConfigJson;
+  public static tasksReader : TasksReader;
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
@@ -47,6 +49,7 @@ export class CubeMxAdapterPanel {
     CubeMxAdapterPanel.makefileReader = new MakefileReader(CubeMxAdapterPanel.workspacePath + "/Makefile");
     CubeMxAdapterPanel.cCppPropReader = new cCppPropertiesReader(CubeMxAdapterPanel.workspacePath + "/.vscode/c_cpp_properties.json");
     CubeMxAdapterPanel.debugLaunchReader = new DebugLaunchReader(CubeMxAdapterPanel.workspacePath + "/.vscode/launch.json");
+    CubeMxAdapterPanel.tasksReader = new TasksReader(CubeMxAdapterPanel.workspacePath + "/.vscode/tasks.json");
   }
 
   //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
