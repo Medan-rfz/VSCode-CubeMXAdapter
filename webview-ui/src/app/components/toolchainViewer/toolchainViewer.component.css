@@ -1,0 +1,21 @@
+
+
+label {
+    display: flex;
+    margin: 2px;
+    width: 60%;
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.container-vertical-stack {
+    overflow: hidden;
+}
+
+.container-horizontal-stack {
+    vertical-align: middle;
+}
+
+

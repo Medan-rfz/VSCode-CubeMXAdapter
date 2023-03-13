@@ -1,0 +1,23 @@
+
+label {
+    margin: 2px;
+}
+
+select {
+    color: var(--vscode-input-foreground);
+    background-color: var(--vscode-input-background);
+    border-color: var(--vscode-focusBorder);
+    border-width: 1px;
+
+    width: 15vw;
+    height: 30px;
+
+    align-self: center;
+}
+
+.main-container {
+    padding: 2px;
+    max-width: 95vw;
+    max-height: 90vh;
+}
+

@@ -1,64 +1,38 @@
-<main>
-
+<div class="container-vertical-stack">
   <h1>{{title}}</h1>
 
-  <div>
-    <h3>C source files</h3>
-    <label>
-      This section is responsible for connecting source files to the current project  
-    </label>
+  <!-- <hr>
+  <editable-list></editable-list>
+  <hr> -->
 
+  <div>
     <div class="container-horizontal-stack">
-      <select multiple (change)="selectCSrcChanged($event)">
-        <option *ngFor="let item of cSrcFiles">{{item}}</option>
-      </select>
-      
-      <div class="container-vertical-stack">
-        <button class="button-file-manipulation" (click)="sendCommand('cSrcAddBattonClick')">Add</button>
-        <button class="button-file-manipulation">Edit</button>
-        <button class="button-file-manipulation" (click)="sendCommand('cSrcDeleteBattonClick')">Delete</button>
-      </div>
+      <button (click)="clickAdaptVSC()">Adapt for VSCode</button>
+      <button (click)="clickAdaptCpp()">Adapt for C++</button>
+
+      <button class = "svdButton" [disabled]="svdListIsLoad ? true : null" (click)="clickLoadSVDButton()">
+        <div class = "container-horizontal-stack" *ngIf="svdListIsLoad"> 
+          <label>Loading... </label>
+          <div class="loader"></div>
+        </div>
+        <div *ngIf="!svdListIsLoad">Load SVD</div>
+      </button>
     </div>
   </div>
 
+  <hr>
   <div>
-    <h3>C++ source files</h3>
-    <label>
-      This section is responsible for connecting source files to the current project  
-    </label>
-
-    <div class="container-horizontal-stack">
-      <select multiple>
-        <option *ngFor="let item of cppSrcFiles">{{item}}</option>
-      </select>
-      
-      <div class="container-vertical-stack">
-        <button class="button-file-manipulation" (click)="sendCommand('cppSrcAddBattonClick')">Add</button>
-        <button class="button-file-manipulation">Edit</button>
-        <button class="button-file-manipulation">Delete</button>
-      </div>
-    </div>
+    <tab-panel [variablesInfo]="varViewer"></tab-panel>
   </div>
 
-  <div>
-    <h3>Header folders</h3>
-    <label>
-      This section is responsible for connecting source files to the current project  
-    </label>
-
-    <div class="container-horizontal-stack">
-      <select multiple>
-        <option *ngFor="let item of headerFolders">{{item}}</option>
-      </select>
-      
-      <div class="container-vertical-stack">
-        <button class="button-file-manipulation" (click)="sendCommand('headerAddBattonClick')">Add</button>
-        <button class="button-file-manipulation">Edit</button>
-        <button class="button-file-manipulation">Delete</button>
-      </div>
-    </div>
+  <hr>
+  <div >
+    <debugger-viewer></debugger-viewer>
   </div>
 
-  <file-viewer></file-viewer>
+  <hr>
+  <div >
+    <toolchain-viewer></toolchain-viewer>
+  </div>
 
-</main>
+</div>

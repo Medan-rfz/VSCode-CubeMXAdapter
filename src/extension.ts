@@ -1,12 +1,11 @@
 import { commands, ExtensionContext } from "vscode";
-import { HelloWorldPanel } from "./panels/HelloWorldPanel";
+import { CubeMxAdapterPanel } from "./panels/MainPanel/CubeMxAdapterPanel";
 
 export function activate(context: ExtensionContext) {
-  // Create the show hello world command
-  const showHelloWorldCommand = commands.registerCommand("CubeMXadapter.showHelloWorld", () => {
-    HelloWorldPanel.render(context.extensionUri);
+  const showCubeMxAdapterCommand = commands.registerCommand("CubeMXadapter.showCubeMxAdapter", () => {
+    CubeMxAdapterPanel.render(context.extensionUri);
   });
 
   // Add command to the extension context
-  context.subscriptions.push(showHelloWorldCommand);
+  context.subscriptions.push(showCubeMxAdapterCommand);
 }

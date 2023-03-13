@@ -1,80 +1,40 @@
 
-main {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  height: 100%;
+hr {
   margin: 0;
-  line-height: 1.7;
 }
 
-main > * {
-  margin: 1rem 0;
-}
-
-div {
-  padding: 2px;
-}
-
-button {
-  color: var(--vscode-button-foreground);
-  background-color: var(--vscode-button-background);
-  border-color: var(--vscode-button-border);
-  border-width: 0px;
-  font-style: var(--vscode-font-family);
-  font-size: var(--vscode-font-size);
-  font-weight: var(--vscode-font-weight);
-  padding: 10px;
-  margin: 15px;
-}
-
-button:hover {
-  background-color: var(--vscode-button-hoverBackground);
-}
-
-textarea {
-  color: var(--vscode-input-foreground);
-  background-color: var(--vscode-input-background);
-  border-color: var(--vscode-focusBorder);
-  border-width: 1px;
-  white-space: nowrap;
-
-  min-width: 500px;
-  min-height: 150px;
-}
-
-select {
-  color: var(--vscode-input-foreground);
-  background-color: var(--vscode-input-background);
-  border-color: var(--vscode-focusBorder);
-  border-width: 1px;
-  overflow-x: scroll;
-
-  min-width: 500px;
-  min-height: 150px;
-  max-height: 500px;
-
-  width: 300px;
-
-  resize: both;
-}
-
-
-.button-file-manipulation {
+tab-panel {
   display: flex;
-  min-width: 100px;
-  text-align: center;
-  margin: 5px 10px 2px 15px;
+  overflow: auto;
+  margin: 0;  
 }
 
-.container-vertical-stack {
+toolchain-viewer {
   display: flex;
-  flex-direction: column;
+  overflow: auto;
+  margin: 0 20px;
 }
 
 .container-horizontal-stack {
-  display: flex;
-  flex-direction: row;
+  width: 100%;
 }
+
+.svdButton {
+  width: 100px;
+}
+
+.loader {
+  border: 2px solid var(--vscode-foreground);
+  border-top: 2px solid var(--vscode-button-hoverBackground);
+  border-radius: 50%;
+  width: 5px;
+  height: 5px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 

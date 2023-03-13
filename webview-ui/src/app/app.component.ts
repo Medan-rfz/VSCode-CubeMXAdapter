@@ -1,27 +1,31 @@
 import { Component } from "@angular/core";
-import { vscode } from "./utilities/vscode";
-
+import { variableViewers } from "./data/variableViewers";
+import { IVaribleViewer } from "./models/variableViewer";
+import { MessageSender } from "./utilities/messageSender";
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.css"],
+  styleUrls: ["./styles/mainStyles.css", "./app.component.css"],
 })
 export class AppComponent {
-  title = "CubeMXAdapt";
-  cSrcFiles : string[] = [];
-  cppSrcFiles : string[] = [];
-  headerFolders : string[] = [];
+  title = "CubeMX adapter";
+  cSrcFiles: string[] = [];
+  cppSrcFiles: string[] = [];
+  headerFolders: string[] = [];
+  definesList: string[] = [];
+  varViewer: IVaribleViewer[] = variableViewers;
+  svdListIsLoad: boolean = false;
 
-  selectedCSrc : any;
-
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   constructor() {
     this._createListenerCommands();
-    this.sendCommand("getAllMakefileInformation");
-  };
+    MessageSender.sendCommand("getAllMakefileInformation");
+  }
 
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
   private _createListenerCommands() {
-    window.addEventListener("message", event => {
+    window.addEventListener("message", (event) => {
       const message = event.data;
 
       switch (message.command) {
@@ -36,21 +40,34 @@ export class AppComponent {
         case "addNewHeaderFolderLine":
           this.headerFolders.push(message.text);
           break;
+
+        case "addNewDefinesLine":
+          this.definesList.push(message.text);
+          break;
+
+        case "svdFile_beginListLoad":
+          this.svdListIsLoad = true;
+          break;
+
+        case "svdFile_endListLoad":
+          this.svdListIsLoad = false;
+          break;
       }
     });
   }
 
-  public sendCommand(command : string) {
-    vscode.postMessage({
-      command: command,
-      text: "",
-    });
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  public clickAdaptVSC() {
+    MessageSender.sendCommand("adaptPrjForVSC");
   }
 
-  public selectCSrcChanged(event : Event) {
-    //event.target.
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  public clickAdaptCpp() {
+    MessageSender.sendCommand("adaptPrjForCpp");
+  }
 
-    return;
+  //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+  public clickLoadSVDButton() {
+    MessageSender.sendCommand("svdFiles_clickLoadButton");
   }
 }
-

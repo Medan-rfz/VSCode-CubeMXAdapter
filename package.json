@@ -2,7 +2,9 @@
   "name": "CubeMXadapter",
   "displayName": "CubeMX adapter",
   "description": "",
-  "version": "0.0.1",
+  "icon": "Icons/Icon.png",
+  "publisher": "Medan",
+  "version": "0.2.0",
   "engines": {
     "vscode": "^1.46.0"
   },
@@ -10,14 +12,14 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:CubeMXadapter.showHelloWorld"
+    "onCommand:CubeMXadapter.showCubeMxAdapter"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "CubeMXadapter.showHelloWorld",
-        "title": "CubeMXadapter"
+        "command": "CubeMXadapter.showCubeMxAdapter",
+        "title": "CubeMX adapter: Home"
       }
     ]
   },

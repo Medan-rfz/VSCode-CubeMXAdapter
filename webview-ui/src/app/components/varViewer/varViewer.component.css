@@ -1,0 +1,51 @@
+
+label {
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: fit-content;
+}
+
+select {
+  color: var(--vscode-input-foreground);
+  background-color: var(--vscode-input-background);
+  border-color: var(--vscode-focusBorder);
+  border-width: 1px;
+  overflow-x: scroll;
+
+  width: 600px;
+  height: 200px;
+  min-width: 200px;
+  max-width: 800px;
+  min-height: 100px;
+  max-height: 800px;
+
+  resize: both;
+}
+
+.button-file-manipulation {
+  display: flex;
+  width: 100px;
+  text-align: center;
+  margin: 5px 10px 2px 15px;
+}
+
+.main-container {
+  /* border: 1px solid var(--vscode-input-foreground); */
+  padding: 2px;
+  width: fit-content;
+  height: fit-content;
+}
+
+.container-horizontal-stack {
+  overflow: hidden;
+}
+
+.container-vertical-stack {
+  overflow: hidden;
+}
+
+.input-new-value {
+  width: 100%;
+}
