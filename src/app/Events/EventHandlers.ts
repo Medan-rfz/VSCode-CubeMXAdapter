@@ -57,7 +57,7 @@ export function toolchainChangeOpenocdPath(text: string) {
         if(value !== undefined) {
 			let newPath = value[0].fsPath.replace(/\\/g, '/');
 			MessageSender.sendMsg("toolChain_UpdateOpenocdPath", newPath);
-			CubeMxAdapterPanel.mainConfigJson.setCompilerPath(newPath);
+			CubeMxAdapterPanel.mainConfigJson.setOpenocdPath(newPath);
         }
     });
 }

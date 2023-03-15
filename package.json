@@ -3,8 +3,9 @@
   "displayName": "CubeMX adapter",
   "description": "",
   "icon": "Icons/Icon.png",
-  "publisher": "Medan",
-  "version": "0.2.0",
+  "publisher": "Medandev",
+  "version": "0.2.2",
+  "repository": "https://github.com/Medan-rfz/VSCode-CubeMXAdapter",
   "engines": {
     "vscode": "^1.46.0"
   },

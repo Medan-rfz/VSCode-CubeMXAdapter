@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as vscode from "vscode";
+import {MessageSender} from "../../app/MessageSender";
 
 interface mainConfig {
     compilerPath: string;
@@ -25,6 +26,9 @@ export class MainConfigJson {
             let config = JSON.parse(fs.readFileSync(this.filePath, "utf-8")).config;
             this.configEntity.compilerPath = config.compilerPath;
             this.configEntity.openocdPath = config.openocdPath;
+            MessageSender.sendMsg("toolChain_UpdatePaths",
+                JSON.stringify({compilerPath: this.configEntity.compilerPath, 
+                openocdPath: this.configEntity.openocdPath}));
         }
     }
 
