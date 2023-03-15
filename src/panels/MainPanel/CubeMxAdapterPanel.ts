@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as fs from 'fs';
 import { getUri } from "../../utilities/getUri";
 import {MakefileReader} from '../../app/FileEntities/MakefileReader';
 import {cCppPropertiesReader} from '../../app/FileEntities/CCppProperties';
@@ -40,6 +41,11 @@ export class CubeMxAdapterPanel {
 
     if (vscode.workspace.workspaceFolders !== undefined) {
       CubeMxAdapterPanel.workspacePath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+    }
+
+    /* Check of existing makefile */
+    if (!fs.existsSync(CubeMxAdapterPanel.workspacePath + "/Makefile")) {
+      vscode.window.showErrorMessage("Makefile was not found!\n The directory does not meet the requirements of the project CubeMX!");
     }
 
     this.eventListener = new EventListener(this._panel.webview);

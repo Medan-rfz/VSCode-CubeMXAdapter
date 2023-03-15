@@ -4,7 +4,7 @@
   "description": "",
   "icon": "Icons/Icon.png",
   "publisher": "Medandev",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "repository": "https://github.com/Medan-rfz/VSCode-CubeMXAdapter",
   "engines": {
     "vscode": "^1.46.0"
